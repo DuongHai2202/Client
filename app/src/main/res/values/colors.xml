@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+
+    <!-- Coffee Theme Palette (Day) -->
+    <color name="coffee_primary">#4E342E</color>
+    <color name="coffee_secondary">#8D6E63</color>
+    <color name="coffee_accent">#FFB300</color>
+    <color name="coffee_background">#FAFAFA</color>
+    <color name="coffee_surface">#FFFFFF</color>
+    <color name="coffee_text">#3E2723</color>
+    <color name="coffee_text_secondary">#795548</color>
+
+    <!-- Coffee Theme Palette (Night) -->
+    <color name="coffee_primary_dark">#6D4C41</color>
+    <color name="coffee_secondary_dark">#A1887F</color>
+    <color name="coffee_background_dark">#121212</color>
+    <color name="coffee_surface_dark">#1E1E1E</color>
+    <color name="coffee_text_dark">#EFEBE9</color>
+</resources>

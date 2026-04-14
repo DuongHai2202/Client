@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Client</string>
+    <string name="open_drawer">Mở Menu</string>
+    <string name="close_drawer">Đóng Menu</string>
+</resources>

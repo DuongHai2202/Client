@@ -1,0 +1,14 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Base.Theme.Client" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Coffee Dark Theme settings -->
+        <item name="colorPrimary">@color/coffee_primary_dark</item>
+        <item name="colorSecondary">@color/coffee_secondary_dark</item>
+        <item name="colorTertiary">@color/coffee_accent</item>
+        <item name="android:windowBackground">@color/coffee_background_dark</item>
+        <item name="android:textColorPrimary">@color/coffee_text_dark</item>
+        
+        <!-- Status Bar -->
+        <item name="android:statusBarColor">@color/coffee_background_dark</item>
+    </style>
+</resources>
