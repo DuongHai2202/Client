@@ -6,12 +6,16 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
-import vn.duonghai.client.activities.MainActivity;
 import vn.duonghai.client.databinding.ActivityLoginBinding;
 
 public class LoginActivity extends AppCompatActivity {
@@ -27,7 +31,6 @@ public class LoginActivity extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
 
-        // binding cho phép truy cập file .xml mà không cần findViewByID
         binding.btnLogin.setOnClickListener(v -> loginUser());
 
         binding.tvRegister.setOnClickListener(v -> {
@@ -58,22 +61,18 @@ public class LoginActivity extends AppCompatActivity {
         binding.btnLogin.setEnabled(false);
         binding.btnLogin.setText("Đang đăng nhập...");
 
-        // khi login thành công -> trang chủ
         mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, task -> {
                     if (task.isSuccessful()) {
                         FirebaseUser user = mAuth.getCurrentUser();
                         
-                        // Lưu cấu hình Ghi nhớ đăng nhập
                         boolean isRemember = binding.cbRemember.isChecked();
                         getSharedPreferences("LoginPrefs", MODE_PRIVATE)
                                 .edit()
                                 .putBoolean("rememberMe", isRemember)
                                 .apply();
-                                
-                        Toast.makeText(LoginActivity.this, "Đăng nhập thành công!", Toast.LENGTH_SHORT).show();
-                        startActivity(new Intent(LoginActivity.this, MainActivity.class));
-                        finishAffinity();
+                        // Kiểm tra role để phân luồng
+                        checkRoleAndNavigate(user);
                     } else {
                         binding.btnLogin.setEnabled(true);
                         binding.btnLogin.setText("Đăng Nhập");
@@ -81,4 +80,39 @@ public class LoginActivity extends AppCompatActivity {
                     }
                 });
     }
+
+    // Check role
+    private void checkRoleAndNavigate(FirebaseUser user) {
+        if (user == null) return;
+
+        FirebaseDatabase.getInstance().getReference("users").child(user.getUid())
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        String role = "customer"; // Mặc định
+                        if (snapshot.exists() && snapshot.hasChild("role")) {
+                            role = snapshot.child("role").getValue(String.class);
+                        }
+
+                        Intent intent;
+                        if ("admin".equals(role)) {
+                            Toast.makeText(LoginActivity.this, "Chào mừng Quản trị viên!", Toast.LENGTH_SHORT).show();
+                            intent = new Intent(LoginActivity.this, AdminMainActivity.class);
+                        } else {
+                            Toast.makeText(LoginActivity.this, "Đăng nhập thành công!", Toast.LENGTH_SHORT).show();
+                            intent = new Intent(LoginActivity.this, MainActivity.class);
+                        }
+                        startActivity(intent);
+                        finishAffinity();
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                        binding.btnLogin.setEnabled(true);
+                        binding.btnLogin.setText("Đăng Nhập");
+                        Toast.makeText(LoginActivity.this, "Lỗi kiểm tra quyền: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
 }
+

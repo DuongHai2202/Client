@@ -43,6 +43,26 @@
         <activity
             android:name=".activities.AddressListActivity"
             android:exported="false" />
+
+        <activity
+            android:name=".activities.AdminMainActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".activities.AddProductActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".activities.CheckoutActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".activities.OrderHistoryActivity"
+            android:exported="false" />
+            
+        <activity
+            android:name=".activities.ProductDetailActivity"
+            android:exported="false" />            
             
     </application>
 

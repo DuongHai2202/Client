@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -17,6 +18,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
@@ -28,17 +30,22 @@ import vn.duonghai.client.adapters.ProductAdapter;
 import vn.duonghai.client.models.Category;
 import vn.duonghai.client.models.Product;
 
-public class HomeFragment extends Fragment {
+public class HomeFragment extends Fragment implements CategoryAdapter.OnCategoryClickListener {
 
     private RecyclerView rcvFeaturedProducts;
     private RecyclerView rcvCategories;
     private ProgressBar pbHomeLoading;
+    private TextView tvFeaturedTitle;
     
-    private DatabaseReference mDatabase;
+    private DatabaseReference mDatabaseProducts;
+    private DatabaseReference mDatabaseCategories;
     private ProductAdapter adapter;
     private CategoryAdapter categoryAdapter;
     private List<Product> productList;
     private List<Category> categoryList;
+    
+    private ValueEventListener currentProductListener;
+    private Query currentQuery;
 
     @Nullable
     @Override
@@ -50,42 +57,73 @@ public class HomeFragment extends Fragment {
         rcvFeaturedProducts = view.findViewById(R.id.rcvFeaturedProducts);
         rcvCategories = view.findViewById(R.id.rcvCategories);
         pbHomeLoading = view.findViewById(R.id.pbHomeLoading);
+        tvFeaturedTitle = view.findViewById(R.id.tvFeaturedTitle);
 
-        mDatabase = FirebaseDatabase.getInstance().getReference("products");
+        mDatabaseProducts = FirebaseDatabase.getInstance().getReference("products");
+        mDatabaseCategories = FirebaseDatabase.getInstance().getReference("categories");
 
-        // Use vertical layout
         rcvFeaturedProducts.setHasFixedSize(true);
         rcvFeaturedProducts.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        // Setup Categories
         rcvCategories.setHasFixedSize(true);
-        rcvCategories.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
-        categoryList = new ArrayList<>();
-        // Tạo dữ liệu mồi cho Categories
-        categoryList.add(new Category("c1", "Trà Sữa", android.R.drawable.ic_btn_speak_now));
-        categoryList.add(new Category("c2", "Cà Phê", android.R.drawable.ic_menu_agenda));
-        categoryList.add(new Category("c3", "Sinh Tố", android.R.drawable.ic_menu_gallery));
-        categoryList.add(new Category("c4", "Ăn Vặt", android.R.drawable.ic_menu_compass));
+        // Thay Horizontal thành Grid 3 cột để khi có >= 4 phần tử sẽ tự gập xuống dòng
+        rcvCategories.setLayoutManager(new androidx.recyclerview.widget.GridLayoutManager(getContext(), 3));
         
-        categoryAdapter = new CategoryAdapter(getContext(), categoryList);
+        categoryList = new ArrayList<>();
+        categoryAdapter = new CategoryAdapter(getContext(), categoryList, this);
         rcvCategories.setAdapter(categoryAdapter);
 
-        // Khởi tạo List Sản phẩm nổi bật
         productList = new ArrayList<>();
         adapter = new ProductAdapter(getContext(), productList);
         rcvFeaturedProducts.setAdapter(adapter);
 
-        // Fetch Featured Products
-        loadFeaturedProducts();
+        // Nút "Tất cả" danh mục giả để reset bộ lọc
+        Category allCategory = new Category("all", "Tất Cả", "https://i.ibb.co/68fDkHj/all-icon.png");
+
+        // Load Categories from Firebase
+        mDatabaseCategories.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                categoryList.clear();
+                categoryList.add(allCategory); // Luôn có mục Tất cả ở đầu
+                for (DataSnapshot snap : snapshot.getChildren()) {
+                    Category cat = snap.getValue(Category.class);
+                    if (cat != null) {
+                        cat.setId(snap.getKey());
+                        categoryList.add(cat);
+                    }
+                }
+                categoryAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {}
+        });
+
+        // Fetch All Featured Products 
+        loadProducts(null, "Sản phẩm nổi bật");
         
         return view;
     }
     
-    private void loadFeaturedProducts() {
+    private void loadProducts(String filterCategoryId, String title) {
         pbHomeLoading.setVisibility(View.VISIBLE);
+        if (tvFeaturedTitle != null) {
+            tvFeaturedTitle.setText(title);
+        }
         
-        // Limit query to 5 items to show as "Featured"
-        mDatabase.limitToFirst(5).addValueEventListener(new ValueEventListener() {
+        // Remove old listener if exists
+        if (currentQuery != null && currentProductListener != null) {
+            currentQuery.removeEventListener(currentProductListener);
+        }
+
+        if (filterCategoryId == null || filterCategoryId.equals("all")) {
+            currentQuery = mDatabaseProducts.limitToFirst(20);
+        } else {
+            currentQuery = mDatabaseProducts.orderByChild("categoryId").equalTo(filterCategoryId);
+        }
+
+        currentProductListener = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 productList.clear();
@@ -100,7 +138,7 @@ public class HomeFragment extends Fragment {
                 pbHomeLoading.setVisibility(View.GONE);
                 
                 if (productList.isEmpty() && getContext() != null) {
-                    Toast.makeText(getContext(), "Chưa có đồ uống nào nổi bật!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Không có sản phẩm nào", Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -111,6 +149,26 @@ public class HomeFragment extends Fragment {
                     Toast.makeText(getContext(), "Lỗi mạng", Toast.LENGTH_SHORT).show();
                 }
             }
-        });
+        };
+
+        currentQuery.addValueEventListener(currentProductListener);
+    }
+
+    @Override
+    public void onCategoryClick(Category category) {
+        if ("all".equals(category.getId())) {
+            loadProducts(null, "Sản phẩm nổi bật");
+        } else {
+            loadProducts(category.getId(), "Danh mục: " + category.getName());
+        }
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        if (currentQuery != null && currentProductListener != null) {
+            currentQuery.removeEventListener(currentProductListener);
+        }
     }
 }
+

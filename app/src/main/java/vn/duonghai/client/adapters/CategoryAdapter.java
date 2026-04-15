@@ -6,10 +6,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.bumptech.glide.Glide;
 
 import java.util.List;
 
@@ -20,10 +21,16 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
 
     private Context context;
     private List<Category> categoryList;
+    private OnCategoryClickListener listener;
 
-    public CategoryAdapter(Context context, List<Category> categoryList) {
+    public interface OnCategoryClickListener {
+        void onCategoryClick(Category category);
+    }
+
+    public CategoryAdapter(Context context, List<Category> categoryList, OnCategoryClickListener listener) {
         this.context = context;
         this.categoryList = categoryList;
+        this.listener = listener;
     }
 
     @NonNull
@@ -37,10 +44,17 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
     public void onBindViewHolder(@NonNull CategoryViewHolder holder, int position) {
         Category category = categoryList.get(position);
         holder.tvCategoryName.setText(category.getName());
-        holder.imgCategoryIcon.setImageResource(category.getIconResId());
+
+        Glide.with(context)
+                .load(category.getImage())
+                .placeholder(R.drawable.ic_launcher_background)
+                .centerCrop()
+                .into(holder.imgCategoryIcon);
 
         holder.itemView.setOnClickListener(v -> {
-            // Có thể thêm logic load filter theo danh mục sau này
+            if (listener != null) {
+                listener.onCategoryClick(category);
+            }
         });
     }
 

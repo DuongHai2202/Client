@@ -55,4 +55,10 @@ dependencies {
     // Glide: xử lý ảnh
     implementation("com.github.bumptech.glide:glide:4.16.0")
     annotationProcessor("com.github.bumptech.glide:compiler:4.16.0")
+
+    // OkHttp: Upload ảnh lên ImgBB (Admin)
+    implementation("com.squareup.okhttp3:okhttp:4.12.0")
+
+    // CircleImageView
+    implementation("de.hdodenhof:circleimageview:3.1.0")
 }

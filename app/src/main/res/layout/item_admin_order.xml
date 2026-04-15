@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="12dp"
+    app:cardCornerRadius="16dp"
+    app:cardElevation="3dp"
+    app:cardBackgroundColor="@color/white">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <!-- Header -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:id="@+id/tvAdminOrderId"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text="#ORD001"
+                android:textColor="#4E342E"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvAdminOrderStatus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Chờ xác nhận"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:paddingHorizontal="12dp"
+                android:paddingVertical="4dp"
+                android:background="@drawable/quantity_box_bg"
+                android:textColor="#FF6F00" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginVertical="8dp"
+            android:background="#E0E0E0" />
+
+        <!-- Thông tin khách -->
+        <TextView
+            android:id="@+id/tvAdminOrderCustomer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="👤 Khách: Dương Hải — 0987654321"
+            android:textColor="#5D4037"
+            android:textSize="13sp" />
+
+        <TextView
+            android:id="@+id/tvAdminOrderAddress"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="📍 123 Nguyễn Huệ, Q1"
+            android:textColor="#8D6E63"
+            android:textSize="13sp" />
+
+        <!-- Sản phẩm -->
+        <TextView
+            android:id="@+id/tvAdminOrderItems"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="🧾 Cà Phê Sữa Đá x2"
+            android:textColor="#5D4037"
+            android:textSize="13sp" />
+
+        <!-- Thanh toán + tổng -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/tvAdminOrderPayment"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text="💳 COD"
+                android:textColor="#8D6E63"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/tvAdminOrderDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="14/04 10:30"
+                android:textColor="#8D6E63"
+                android:textSize="12sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:id="@+id/tvAdminOrderNote"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:textColor="#8D6E63"
+                android:textSize="12sp"
+                android:textStyle="italic"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/tvAdminOrderTotal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="85,000 đ"
+                android:textColor="#D84315"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <!-- Nút hành động -->
+        <LinearLayout
+            android:id="@+id/llAdminOrderActions"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:orientation="horizontal"
+            android:gravity="end">
+
+            <Button
+                android:id="@+id/btnRejectOrder"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:text="Từ chối"
+                android:textSize="12sp"
+                android:backgroundTint="#D32F2F"
+                android:textColor="@color/white"
+                android:layout_marginEnd="8dp"
+                app:cornerRadius="8dp" />
+
+            <Button
+                android:id="@+id/btnNextStatus"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:text="Xác nhận"
+                android:textSize="12sp"
+                android:backgroundTint="#4E342E"
+                android:textColor="@color/white"
+                app:cornerRadius="8dp" />
+        </LinearLayout>
+    </LinearLayout>
+</androidx.cardview.widget.CardView>

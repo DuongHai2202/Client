@@ -3,12 +3,16 @@ package vn.duonghai.client.models;
 public class Category {
     private String id;
     private String name;
-    private int iconResId; // Dùng res ID cho các icon cứng có sẵn
+    private String image;
 
-    public Category(String id, String name, int iconResId) {
+    public Category() {
+        // Firebase requires empty constructor
+    }
+
+    public Category(String id, String name, String image) {
         this.id = id;
         this.name = name;
-        this.iconResId = iconResId;
+        this.image = image;
     }
 
     public String getId() {
@@ -27,11 +31,11 @@ public class Category {
         this.name = name;
     }
 
-    public int getIconResId() {
-        return iconResId;
+    public String getImage() {
+        return image;
     }
 
-    public void setIconResId(int iconResId) {
-        this.iconResId = iconResId;
+    public void setImage(String image) {
+        this.image = image;
     }
 }

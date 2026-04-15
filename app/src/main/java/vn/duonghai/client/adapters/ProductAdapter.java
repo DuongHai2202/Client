@@ -80,12 +80,15 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
             }
         });
         
-        // Nhấn toàn bộ the Cung để hiện Popup
-        holder.itemView.setOnClickListener(v -> {
-            if (product.getIsAvailable()) {
-                showProductOptionsDialog(product);
-            }
+        // Nhấn vào ảnh để xem thông tin chi tiết
+        holder.imgProduct.setOnClickListener(v -> {
+            android.content.Intent intent = new android.content.Intent(context, vn.duonghai.client.activities.ProductDetailActivity.class);
+            intent.putExtra("PRODUCT_ID", product.getId());
+            context.startActivity(intent);
         });
+        
+        // Gỡ bỏ sự kiện click toàn bộ thẻ để tránh bấm nhầm
+        holder.itemView.setOnClickListener(null);
     }
 
     @Override

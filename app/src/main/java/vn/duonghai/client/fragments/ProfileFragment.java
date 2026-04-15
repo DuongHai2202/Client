@@ -45,7 +45,7 @@ public class ProfileFragment extends Fragment {
         
         TextView tvOrderHistory = view.findViewById(R.id.tvOrderHistory);
         tvOrderHistory.setOnClickListener(v -> {
-            Toast.makeText(getContext(), "Tính năng Lịch sử đơn hàng sắp ra mắt", Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(getActivity(), vn.duonghai.client.activities.OrderHistoryActivity.class));
         });
 
         TextView tvFavoriteDrinks = view.findViewById(R.id.tvFavoriteDrinks);

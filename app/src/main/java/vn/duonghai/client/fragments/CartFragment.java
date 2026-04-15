@@ -83,7 +83,8 @@ public class CartFragment extends Fragment implements CartAdapter.OnCartItemInte
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         if (snapshot.exists() && snapshot.hasChildren()) {
-                            Toast.makeText(getContext(), "Tính năng Thanh Toán (Checkout) sẽ được phát triển sau!", Toast.LENGTH_LONG).show();
+                            // Chuyển sang CheckoutActivity
+                            startActivity(new android.content.Intent(getActivity(), vn.duonghai.client.activities.CheckoutActivity.class));
                         } else {
                             Toast.makeText(getContext(), "Vui lòng thêm ít nhất 1 Địa chỉ để giao hàng!", Toast.LENGTH_LONG).show();
                             startActivity(new android.content.Intent(getActivity(), vn.duonghai.client.activities.AddAddressActivity.class));
