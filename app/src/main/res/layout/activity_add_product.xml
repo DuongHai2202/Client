@@ -101,17 +101,20 @@
             </com.google.android.material.textfield.TextInputLayout>
 
             <!-- Mã danh mục -->
-            <com.google.android.material.textfield.TextInputLayout
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="ID Danh Mục (VD: c1, c2)"
-                android:layout_marginBottom="16dp">
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/edtCategory"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-            </com.google.android.material.textfield.TextInputLayout>
+                android:text="Danh Mục Sản Phẩm (*)"
+                android:textColor="#8D6E63"
+                android:textSize="12sp"
+                android:layout_marginBottom="4dp"/>
+                
+            <Spinner
+                android:id="@+id/spinnerCategory"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:background="@drawable/quantity_box_bg"
+                android:layout_marginBottom="16dp" />
 
             <TextView
                 android:layout_width="match_parent"

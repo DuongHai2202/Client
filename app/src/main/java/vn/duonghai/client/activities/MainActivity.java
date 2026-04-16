@@ -23,6 +23,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import vn.duonghai.client.R;
+import vn.duonghai.client.fragments.AboutUsFragment;
 import vn.duonghai.client.fragments.CartFragment;
 import vn.duonghai.client.fragments.HomeFragment;
 import vn.duonghai.client.fragments.MenuFragment;
@@ -93,6 +94,9 @@ public class MainActivity extends AppCompatActivity {
             } else if (itemId == R.id.nav_profile) {
                 selectedFragment = new ProfileFragment();
                 title = "Tài khoản";
+            } else if (itemId == R.id.nav_about) {
+                selectedFragment = new AboutUsFragment();
+                title = "Về chúng tôi";
             }
 
             if (selectedFragment != null) {

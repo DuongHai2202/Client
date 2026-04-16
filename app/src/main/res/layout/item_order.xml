@@ -52,6 +52,154 @@
             android:layout_marginVertical="8dp"
             android:background="#E0E0E0" />
 
+        <!-- Thanh trạng thái tiến trình dạng bước (Kiểu Shopee) -->
+        <LinearLayout
+            android:id="@+id/llStatusSteps"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="8dp">
+
+            <!-- Bước 1: Chờ xác nhận -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center">
+                <View
+                    android:id="@+id/dotPending"
+                    android:layout_width="14dp"
+                    android:layout_height="14dp"
+                    android:background="@drawable/status_dot_inactive" />
+                <TextView
+                    android:id="@+id/tvStepPending"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Chờ"
+                    android:textSize="9sp"
+                    android:textColor="#BDBDBD"
+                    android:layout_marginTop="2dp" />
+            </LinearLayout>
+
+            <View
+                android:id="@+id/linePendingConfirmed"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="2dp"
+                android:background="#E0E0E0" />
+
+            <!-- Bước 2: Xác nhận -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center">
+                <View
+                    android:id="@+id/dotConfirmed"
+                    android:layout_width="14dp"
+                    android:layout_height="14dp"
+                    android:background="@drawable/status_dot_inactive" />
+                <TextView
+                    android:id="@+id/tvStepConfirmed"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Xác nhận"
+                    android:textSize="9sp"
+                    android:textColor="#BDBDBD"
+                    android:layout_marginTop="2dp" />
+            </LinearLayout>
+
+            <View
+                android:id="@+id/lineConfirmedPreparing"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="2dp"
+                android:background="#E0E0E0" />
+
+            <!-- Bước 3: Pha chế -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center">
+                <View
+                    android:id="@+id/dotPreparing"
+                    android:layout_width="14dp"
+                    android:layout_height="14dp"
+                    android:background="@drawable/status_dot_inactive" />
+                <TextView
+                    android:id="@+id/tvStepPreparing"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Pha chế"
+                    android:textSize="9sp"
+                    android:textColor="#BDBDBD"
+                    android:layout_marginTop="2dp" />
+            </LinearLayout>
+
+            <View
+                android:id="@+id/linePreparingShipping"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="2dp"
+                android:background="#E0E0E0" />
+
+            <!-- Bước 4: Giao hàng -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center">
+                <View
+                    android:id="@+id/dotShipping"
+                    android:layout_width="14dp"
+                    android:layout_height="14dp"
+                    android:background="@drawable/status_dot_inactive" />
+                <TextView
+                    android:id="@+id/tvStepShipping"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Giao"
+                    android:textSize="9sp"
+                    android:textColor="#BDBDBD"
+                    android:layout_marginTop="2dp" />
+            </LinearLayout>
+
+            <View
+                android:id="@+id/lineShippingCompleted"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="2dp"
+                android:background="#E0E0E0" />
+
+            <!-- Bước 5: Hoàn thành -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center">
+                <View
+                    android:id="@+id/dotCompleted"
+                    android:layout_width="14dp"
+                    android:layout_height="14dp"
+                    android:background="@drawable/status_dot_inactive" />
+                <TextView
+                    android:id="@+id/tvStepCompleted"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Xong"
+                    android:textSize="9sp"
+                    android:textColor="#BDBDBD"
+                    android:layout_marginTop="2dp" />
+            </LinearLayout>
+        </LinearLayout>
+
         <!-- Danh sách sản phẩm tóm tắt -->
         <TextView
             android:id="@+id/tvOrderItemsSummary"

@@ -15,17 +15,9 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#4E342E"
+            android:background="#009688"
             android:orientation="vertical"
             android:padding="24dp">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Trang chủ"
-                android:textColor="@color/white"
-                android:textSize="26sp"
-                android:textStyle="bold" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -170,9 +162,9 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="📌 Đơn Hàng Vừa Nhận"
+                android:text="Đơn Hàng"
                 android:textColor="#4E342E"
-                android:textSize="16sp"
+                android:textSize="18sp"
                 android:textStyle="bold"
                 android:layout_marginBottom="12dp" />
 

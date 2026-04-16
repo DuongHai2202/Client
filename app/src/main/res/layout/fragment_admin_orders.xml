@@ -5,35 +5,110 @@
     android:layout_height="match_parent"
     android:background="#F5F0EB">
 
-    <LinearLayout
-        android:id="@+id/headerAdminOrders"
+    <!-- Thanh lọc trạng thái kiểu Shopee cho Admin -->
+    <HorizontalScrollView
+        android:id="@+id/hsvAdminStatusFilter"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:background="#4E342E"
-        android:gravity="center"
+        android:layout_height="wrap_content"
+        android:scrollbars="none"
+        android:background="@color/white"
+        android:elevation="2dp"
         app:layout_constraintTop_toTopOf="parent">
 
-        <TextView
+        <LinearLayout
+            android:id="@+id/llAdminStatusTabs"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="🧾 Quản Lý Đơn Hàng"
-            android:textColor="@color/white"
-            android:textStyle="bold"
-            android:textSize="18sp" />
-    </LinearLayout>
+            android:layout_height="48dp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingHorizontal="4dp">
+
+            <TextView
+                android:id="@+id/tabAdminAll"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:paddingHorizontal="16dp"
+                android:text="Tất cả"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:textColor="#4E342E" />
+
+            <TextView
+                android:id="@+id/tabAdminPending"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:paddingHorizontal="16dp"
+                android:text="Chờ xác nhận"
+                android:textSize="14sp"
+                android:textColor="#8D6E63" />
+
+            <TextView
+                android:id="@+id/tabAdminConfirmed"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:paddingHorizontal="16dp"
+                android:text="Đã xác nhận"
+                android:textSize="14sp"
+                android:textColor="#8D6E63" />
+
+            <TextView
+                android:id="@+id/tabAdminPreparing"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:paddingHorizontal="16dp"
+                android:text="Đang pha chế"
+                android:textSize="14sp"
+                android:textColor="#8D6E63" />
+
+            <TextView
+                android:id="@+id/tabAdminShipping"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:paddingHorizontal="16dp"
+                android:text="Đang giao"
+                android:textSize="14sp"
+                android:textColor="#8D6E63" />
+
+            <TextView
+                android:id="@+id/tabAdminCompleted"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:paddingHorizontal="16dp"
+                android:text="Hoàn thành"
+                android:textSize="14sp"
+                android:textColor="#8D6E63" />
+
+            <TextView
+                android:id="@+id/tabAdminCancelled"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:paddingHorizontal="16dp"
+                android:text="Đã hủy"
+                android:textSize="14sp"
+                android:textColor="#8D6E63" />
+
+        </LinearLayout>
+    </HorizontalScrollView>
 
     <TextView
         android:id="@+id/tvEmptyAdminOrders"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Chưa có đơn hàng nào.\nĐơn mới sẽ xuất hiện tự động!"
+        android:text="Không có đơn hàng nào."
         android:textColor="#8D6E63"
         android:textSize="16sp"
         android:textAlignment="center"
         android:visibility="gone"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/headerAdminOrders"
+        app:layout_constraintTop_toBottomOf="@id/hsvAdminStatusFilter"
         app:layout_constraintBottom_toBottomOf="parent" />
 
     <androidx.recyclerview.widget.RecyclerView
@@ -42,7 +117,7 @@
         android:layout_height="0dp"
         android:padding="12dp"
         android:clipToPadding="false"
-        app:layout_constraintTop_toBottomOf="@id/headerAdminOrders"
+        app:layout_constraintTop_toBottomOf="@id/hsvAdminStatusFilter"
         app:layout_constraintBottom_toBottomOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

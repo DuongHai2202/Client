@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -49,9 +50,12 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderVH> {
         }
         holder.tvOrderId.setText(shortId);
 
-        // Trạng thái
+        // Trạng thái text
         holder.tvOrderStatus.setText(getStatusText(order.getStatus()));
         holder.tvOrderStatus.setTextColor(getStatusColor(order.getStatus()));
+
+        // Thanh tiến trình bước
+        updateStatusSteps(holder, order.getStatus());
 
         // Tóm tắt sản phẩm
         StringBuilder sb = new StringBuilder();
@@ -69,6 +73,60 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderVH> {
 
         // Tổng tiền
         holder.tvOrderTotal.setText(formatter.format(order.getTotalAmount()) + " đ");
+    }
+
+    private void updateStatusSteps(OrderVH holder, String status) {
+        int stepIndex = getStepIndex(status);
+        boolean isCancelled = "cancelled".equals(status);
+
+        // Danh sách các dot view
+        View[] dots = {holder.dotPending, holder.dotConfirmed, holder.dotPreparing, holder.dotShipping, holder.dotCompleted};
+        TextView[] labels = {holder.tvStepPending, holder.tvStepConfirmed, holder.tvStepPreparing, holder.tvStepShipping, holder.tvStepCompleted};
+        View[] lines = {holder.linePendingConfirmed, holder.lineConfirmedPreparing, holder.linePreparingShipping, holder.lineShippingCompleted};
+
+        if (isCancelled) {
+            // Đơn bị hủy -> ẩn thanh tiến trình
+            holder.llStatusSteps.setVisibility(View.GONE);
+            return;
+        }
+
+        holder.llStatusSteps.setVisibility(View.VISIBLE);
+
+        for (int i = 0; i < dots.length; i++) {
+            if (i < stepIndex) {
+                // Đã qua -> xanh lá
+                dots[i].setBackgroundResource(R.drawable.status_dot_active);
+                labels[i].setTextColor(0xFF4CAF50);
+            } else if (i == stepIndex) {
+                // Bước hiện tại -> cam
+                dots[i].setBackgroundResource(R.drawable.status_dot_current);
+                labels[i].setTextColor(0xFFFF6F00);
+            } else {
+                // Chưa tới -> xám
+                dots[i].setBackgroundResource(R.drawable.status_dot_inactive);
+                labels[i].setTextColor(0xFFBDBDBD);
+            }
+        }
+
+        for (int i = 0; i < lines.length; i++) {
+            if (i < stepIndex) {
+                lines[i].setBackgroundColor(0xFF4CAF50); // xanh lá
+            } else {
+                lines[i].setBackgroundColor(0xFFE0E0E0); // xám
+            }
+        }
+    }
+
+    private int getStepIndex(String status) {
+        if (status == null) return 0;
+        switch (status) {
+            case "pending": return 0;
+            case "confirmed": return 1;
+            case "preparing": return 2;
+            case "shipping": return 3;
+            case "completed": return 4;
+            default: return 0;
+        }
     }
 
     @Override
@@ -104,6 +162,11 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderVH> {
 
     public static class OrderVH extends RecyclerView.ViewHolder {
         TextView tvOrderId, tvOrderStatus, tvOrderItemsSummary, tvOrderDate, tvOrderTotal;
+        // Step indicators
+        LinearLayout llStatusSteps;
+        View dotPending, dotConfirmed, dotPreparing, dotShipping, dotCompleted;
+        View linePendingConfirmed, lineConfirmedPreparing, linePreparingShipping, lineShippingCompleted;
+        TextView tvStepPending, tvStepConfirmed, tvStepPreparing, tvStepShipping, tvStepCompleted;
 
         public OrderVH(@NonNull View itemView) {
             super(itemView);
@@ -112,6 +175,24 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderVH> {
             tvOrderItemsSummary = itemView.findViewById(R.id.tvOrderItemsSummary);
             tvOrderDate = itemView.findViewById(R.id.tvOrderDate);
             tvOrderTotal = itemView.findViewById(R.id.tvOrderTotal);
+
+            llStatusSteps = itemView.findViewById(R.id.llStatusSteps);
+            dotPending = itemView.findViewById(R.id.dotPending);
+            dotConfirmed = itemView.findViewById(R.id.dotConfirmed);
+            dotPreparing = itemView.findViewById(R.id.dotPreparing);
+            dotShipping = itemView.findViewById(R.id.dotShipping);
+            dotCompleted = itemView.findViewById(R.id.dotCompleted);
+
+            linePendingConfirmed = itemView.findViewById(R.id.linePendingConfirmed);
+            lineConfirmedPreparing = itemView.findViewById(R.id.lineConfirmedPreparing);
+            linePreparingShipping = itemView.findViewById(R.id.linePreparingShipping);
+            lineShippingCompleted = itemView.findViewById(R.id.lineShippingCompleted);
+
+            tvStepPending = itemView.findViewById(R.id.tvStepPending);
+            tvStepConfirmed = itemView.findViewById(R.id.tvStepConfirmed);
+            tvStepPreparing = itemView.findViewById(R.id.tvStepPreparing);
+            tvStepShipping = itemView.findViewById(R.id.tvStepShipping);
+            tvStepCompleted = itemView.findViewById(R.id.tvStepCompleted);
         }
     }
 }

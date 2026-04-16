@@ -182,7 +182,10 @@ public class CheckoutActivity extends AppCompatActivity {
 
         String note = edtNote.getText().toString().trim();
         String orderId = ordersRef.push().getKey();
-        if (orderId == null) { setLoading(false); return; }
+        if (orderId == null) {
+            setLoading(false);
+            return;
+        }
 
         // Lấy thông tin user
         String finalPaymentMethod = paymentMethod;
@@ -216,8 +219,18 @@ public class CheckoutActivity extends AppCompatActivity {
                     if (task.isSuccessful()) {
                         // Xóa giỏ hàng sau khi đặt thành công
                         cartRef.removeValue();
-                        Toast.makeText(CheckoutActivity.this, "🎉 Đặt hàng thành công! Quán sẽ xác nhận ngay.", Toast.LENGTH_LONG).show();
-                        finish();
+
+                        if ("Banking".equals(finalPaymentMethod)) {
+                            // Mở màn hình QR thanh toán
+                            android.content.Intent qrIntent = new android.content.Intent(CheckoutActivity.this, PaymentQRActivity.class);
+                            qrIntent.putExtra("ORDER_ID", orderId);
+                            qrIntent.putExtra("TOTAL_AMOUNT", subtotal + shippingFee);
+                            startActivity(qrIntent);
+                            finish();
+                        } else {
+                            Toast.makeText(CheckoutActivity.this, "🎉 Đặt hàng thành công! Quán sẽ xác nhận ngay.", Toast.LENGTH_LONG).show();
+                            finish();
+                        }
                     } else {
                         setLoading(false);
                         Toast.makeText(CheckoutActivity.this, "Lỗi đặt hàng!", Toast.LENGTH_SHORT).show();

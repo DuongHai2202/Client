@@ -192,7 +192,7 @@
                             android:id="@+id/rbBanking"
                             android:layout_width="match_parent"
                             android:layout_height="48dp"
-                            android:text="Chuyển khoản(test)"
+                            android:text="Chuyển khoản ngân hàng (VietQR)"
                             android:textSize="14sp" />
                     </RadioGroup>
                 </LinearLayout>

@@ -5,21 +5,27 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -27,13 +33,15 @@ import java.util.List;
 import java.util.Map;
 
 import vn.duonghai.client.R;
+import vn.duonghai.client.models.Category;
 import vn.duonghai.client.models.Product;
 import vn.duonghai.client.utils.ImgbbUploader;
 
 public class AddProductActivity extends AppCompatActivity {
 
     private ImageView imgPreview;
-    private TextInputEditText edtProductName, edtDescription, edtCategory;
+    private TextInputEditText edtProductName, edtDescription;
+    private Spinner spinnerCategory;
     private TextInputEditText edtBasePrice, edtPriceM, edtPriceL;
     private TextInputEditText edtToppings, edtSugar, edtIce;
     
@@ -47,6 +55,11 @@ public class AddProductActivity extends AppCompatActivity {
     private Uri selectedImageUri = null;
     private String editProductId = null;
     private String oldImageUrl = null;
+    private String oldCategoryId = null;
+
+    private List<Category> categoryList = new ArrayList<>();
+    private List<String> categoryNames = new ArrayList<>();
+    private ArrayAdapter<String> categoryAdapter;
 
     private final ActivityResultLauncher<Intent> imagePickerLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
@@ -67,7 +80,7 @@ public class AddProductActivity extends AppCompatActivity {
         imgPreview = findViewById(R.id.imgPreview);
         edtProductName = findViewById(R.id.edtProductName);
         edtDescription = findViewById(R.id.edtDescription);
-        edtCategory = findViewById(R.id.edtCategory);
+        spinnerCategory = findViewById(R.id.spinnerCategory);
         edtBasePrice = findViewById(R.id.edtBasePrice);
         edtPriceM = findViewById(R.id.edtPriceM);
         edtPriceL = findViewById(R.id.edtPriceL);
@@ -82,6 +95,12 @@ public class AddProductActivity extends AppCompatActivity {
         btnBack = findViewById(R.id.btnBackAddProduct);
         tvTitle = findViewById(R.id.tvAddProductTitle);
 
+        categoryAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, categoryNames);
+        categoryAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerCategory.setAdapter(categoryAdapter);
+
+        loadCategories();
+
         btnBack.setOnClickListener(v -> finish());
         btnSelectImage.setOnClickListener(v -> openGallery());
         btnSubmit.setOnClickListener(v -> handleSubmission());
@@ -94,6 +113,45 @@ public class AddProductActivity extends AppCompatActivity {
         }
     }
 
+    private void loadCategories() {
+        FirebaseDatabase.getInstance().getReference("categories")
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        categoryList.clear();
+                        categoryNames.clear();
+                        for (DataSnapshot snap : snapshot.getChildren()) {
+                            Category cat = snap.getValue(Category.class);
+                            if (cat != null) {
+                                cat.setId(snap.getKey());
+                                categoryList.add(cat);
+                                categoryNames.add(cat.getName());
+                            }
+                        }
+                        categoryAdapter.notifyDataSetChanged();
+
+                        // Nếu đang edit, set lại selected item
+                        if (oldCategoryId != null) {
+                            setSpinnerSelection(oldCategoryId);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                        Toast.makeText(AddProductActivity.this, "Lỗi tải danh mục: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+
+    private void setSpinnerSelection(String categoryId) {
+        for (int i = 0; i < categoryList.size(); i++) {
+            if (categoryList.get(i).getId().equals(categoryId)) {
+                spinnerCategory.setSelection(i);
+                break;
+            }
+        }
+    }
+
     private void loadProductDataForEdit(String productId) {
         setLoadingState(true);
         FirebaseDatabase.getInstance().getReference("products").child(productId)
@@ -103,8 +161,12 @@ public class AddProductActivity extends AppCompatActivity {
                 if (p != null) {
                     edtProductName.setText(p.getName());
                     edtDescription.setText(p.getDescription());
-                    edtCategory.setText(p.getCategoryId());
                     cbIsAvailable.setChecked(p.getIsAvailable());
+                    
+                    oldCategoryId = p.getCategoryId();
+                    if (!categoryList.isEmpty() && oldCategoryId != null) {
+                        setSpinnerSelection(oldCategoryId);
+                    }
                     
                     oldImageUrl = p.getImage();
                     if (oldImageUrl != null && !oldImageUrl.isEmpty()) {
@@ -135,7 +197,13 @@ public class AddProductActivity extends AppCompatActivity {
     private void handleSubmission() {
         String name = edtProductName.getText().toString().trim();
         String description = edtDescription.getText().toString().trim();
-        String category = edtCategory.getText().toString().trim();
+        
+        int selectedIndex = spinnerCategory.getSelectedItemPosition();
+        if (selectedIndex == -1 || categoryList.isEmpty()) {
+            Toast.makeText(this, "Vui lòng đợi tải danh mục hoặc thêm danh mục trước!", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        String categoryId = categoryList.get(selectedIndex).getId();
         
         String priceStr = edtBasePrice.getText().toString().trim();
         String priceMStr = edtPriceM.getText().toString().trim();
@@ -145,8 +213,8 @@ public class AddProductActivity extends AppCompatActivity {
         String sugarStr = edtSugar.getText().toString().trim();
         String iceStr = edtIce.getText().toString().trim();
 
-        if (name.isEmpty() || category.isEmpty() || priceStr.isEmpty()) {
-            Toast.makeText(this, "Vui lòng nhập đủ Tên, ID danh mục và Giá S (Cơ bản)!", Toast.LENGTH_SHORT).show();
+        if (name.isEmpty() || priceStr.isEmpty()) {
+            Toast.makeText(this, "Vui lòng nhập đủ Tên và Giá S (Cơ bản)!", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -162,7 +230,7 @@ public class AddProductActivity extends AppCompatActivity {
             if (editProductId != null && oldImageUrl != null) {
                 // Giữ nguyên ảnh cũ, bỏ qua upload ImgBB
                 setLoadingState(true);
-                saveProductToFirebase(name, description, category, basePrice, priceMStr, priceLStr, 
+                saveProductToFirebase(name, description, categoryId, basePrice, priceMStr, priceLStr, 
                                         toppingsStr, sugarStr, iceStr, oldImageUrl, cbIsAvailable.isChecked());
                 return;
             } else {
@@ -176,7 +244,7 @@ public class AddProductActivity extends AppCompatActivity {
         ImgbbUploader.uploadImage(this, selectedImageUri, new ImgbbUploader.UploadCallback() {
             @Override
             public void onSuccess(String imageUrl) {
-                saveProductToFirebase(name, description, category, basePrice, priceMStr, priceLStr, 
+                saveProductToFirebase(name, description, categoryId, basePrice, priceMStr, priceLStr, 
                                         toppingsStr, sugarStr, iceStr, imageUrl, cbIsAvailable.isChecked());
             }
 
@@ -239,7 +307,6 @@ public class AddProductActivity extends AppCompatActivity {
                 });
     }
 
-    // Hàm tiện ích cắt chuỗi ngăn cách bởi dấu phẩy thành List
     private List<String> parseCommaString(String input) {
         List<String> list = new ArrayList<>();
         if (input == null || input.isEmpty()) return list;
@@ -258,7 +325,7 @@ public class AddProductActivity extends AppCompatActivity {
         btnSelectImage.setEnabled(!isLoading);
         edtProductName.setEnabled(!isLoading);
         edtBasePrice.setEnabled(!isLoading);
-        edtCategory.setEnabled(!isLoading);
+        spinnerCategory.setEnabled(!isLoading);
         progressBar.setVisibility(isLoading ? View.VISIBLE : View.GONE);
         btnSubmit.setText(isLoading ? "Đang xử lý..." : "Tải ảnh lên");
     }

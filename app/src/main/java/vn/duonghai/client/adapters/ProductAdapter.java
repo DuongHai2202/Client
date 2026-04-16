@@ -34,7 +34,6 @@ import java.util.Map;
 import vn.duonghai.client.R;
 import vn.duonghai.client.models.CartItem;
 import vn.duonghai.client.models.Product;
-
 public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductViewHolder> {
 
     private Context context;
