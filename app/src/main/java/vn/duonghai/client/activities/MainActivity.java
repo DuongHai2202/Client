@@ -86,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
                 title = "Trang chủ";
             } else if (itemId == R.id.nav_menu) {
                 selectedFragment = new MenuFragment();
-                title = "Đồ uống";
+                title = "Menu";
             } else if (itemId == R.id.nav_cart) {
                 selectedFragment = new CartFragment();
                 title = "Giỏ hàng";

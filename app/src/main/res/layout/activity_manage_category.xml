@@ -7,7 +7,7 @@
 
     <!-- Header -->
     <LinearLayout
-        android:id="@+id/headerAdminMenu"
+        android:id="@+id/headerManageCategory"
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:background="#4E342E"
@@ -16,51 +16,35 @@
         android:orientation="horizontal"
         app:layout_constraintTop_toTopOf="parent">
 
-        <TextView
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:text="Quản Lý Sản Phẩm"
-            android:textColor="@color/white"
-            android:textStyle="bold"
-            android:textSize="18sp" />
-
         <ImageButton
-            android:id="@+id/btnManageCategories"
+            android:id="@+id/btnBackCategory"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:background="?selectableItemBackgroundBorderless"
-            android:src="@android:drawable/ic_menu_sort_by_size"
+            android:src="@android:drawable/ic_menu_revert"
             app:tint="@color/white" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:text="Quản Lý Danh Mục"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            android:textSize="18sp" />
     </LinearLayout>
 
-    <!-- Empty state text -->
-    <TextView
-        android:id="@+id/tvEmptyProducts"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Chưa có sản phẩm nào.\nBấm nút + để thêm mới!"
-        android:textColor="#8D6E63"
-        android:textSize="16sp"
-        android:textAlignment="center"
-        android:visibility="gone"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/headerAdminMenu"
-        app:layout_constraintBottom_toBottomOf="parent" />
-
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rcvManageProducts"
+        android:id="@+id/rcvManageCategories"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:padding="12dp"
         android:clipToPadding="false"
-        app:layout_constraintTop_toBottomOf="@id/headerAdminMenu"
+        app:layout_constraintTop_toBottomOf="@id/headerManageCategory"
         app:layout_constraintBottom_toBottomOf="parent" />
 
-    <!-- FAB Thêm Sản Phẩm -->
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fabAddProduct"
+        android:id="@+id/fabAddCategory"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="24dp"

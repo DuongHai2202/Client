@@ -69,6 +69,12 @@ public class AdminProductAdapter extends RecyclerView.Adapter<AdminProductAdapte
                     .setNegativeButton("Hủy", null)
                     .show();
         });
+
+        holder.btnEdit.setOnClickListener(v -> {
+            android.content.Intent intent = new android.content.Intent(context, vn.duonghai.client.activities.AddProductActivity.class);
+            intent.putExtra("PRODUCT_ID", product.getId());
+            context.startActivity(intent);
+        });
     }
 
     @Override
@@ -79,7 +85,7 @@ public class AdminProductAdapter extends RecyclerView.Adapter<AdminProductAdapte
     public static class AdminProductVH extends RecyclerView.ViewHolder {
         ImageView imgProduct;
         TextView tvName, tvPrice, tvCategory, tvStatus;
-        ImageButton btnDelete;
+        ImageButton btnDelete, btnEdit;
 
         public AdminProductVH(@NonNull View itemView) {
             super(itemView);
@@ -89,6 +95,7 @@ public class AdminProductAdapter extends RecyclerView.Adapter<AdminProductAdapte
             tvCategory = itemView.findViewById(R.id.tvAdminProductCategory);
             tvStatus = itemView.findViewById(R.id.tvAdminProductStatus);
             btnDelete = itemView.findViewById(R.id.btnDeleteProduct);
+            btnEdit = itemView.findViewById(R.id.btnEditProduct);
         }
     }
 }

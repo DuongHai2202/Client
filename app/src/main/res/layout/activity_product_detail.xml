@@ -125,8 +125,8 @@
         <Button
             android:id="@+id/btnOpenOptions"
             android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:text="CHỌN THUỘC TÍNH (THAY ĐỔI / THÊM GIỎ)"
+            android:layout_height="50dp"
+            android:text="Thêm vào giỏ hàng"
             android:textSize="16sp"
             android:textStyle="bold"
             android:backgroundTint="@color/coffee_primary"

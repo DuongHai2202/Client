@@ -62,8 +62,16 @@
             
         <activity
             android:name=".activities.ProductDetailActivity"
-            android:exported="false" />            
-            
+            android:exported="false" />
+
+        <activity
+            android:name=".activities.ManageCategoryActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".activities.AddCategoryActivity"
+            android:exported="false" />
+
     </application>
 
 </manifest>

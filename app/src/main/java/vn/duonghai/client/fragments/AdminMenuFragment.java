@@ -57,6 +57,11 @@ public class AdminMenuFragment extends Fragment {
             startActivity(new Intent(getActivity(), AddProductActivity.class));
         });
 
+        android.widget.ImageButton btnManageCategories = view.findViewById(R.id.btnManageCategories);
+        btnManageCategories.setOnClickListener(v -> {
+            startActivity(new Intent(getActivity(), vn.duonghai.client.activities.ManageCategoryActivity.class));
+        });
+
         loadProducts();
         return view;
     }

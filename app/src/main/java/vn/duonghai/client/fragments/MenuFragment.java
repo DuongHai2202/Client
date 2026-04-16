@@ -10,30 +10,42 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import vn.duonghai.client.R;
+import vn.duonghai.client.adapters.CategoryAdapter;
 import vn.duonghai.client.adapters.ProductAdapter;
+import vn.duonghai.client.models.Category;
 import vn.duonghai.client.models.Product;
 
-public class MenuFragment extends Fragment {
+public class MenuFragment extends Fragment implements CategoryAdapter.OnCategoryClickListener {
 
     private RecyclerView rvProducts;
+    private RecyclerView rvCategoriesMenu;
     private ProgressBar progressBar;
     
-    private DatabaseReference mDatabase;
+    private DatabaseReference mDatabaseProducts;
+    private DatabaseReference mDatabaseCategories;
+    
     private ProductAdapter adapter;
+    private CategoryAdapter categoryAdapter;
+    
     private List<Product> productList;
+    private List<Category> categoryList;
+
+    private ValueEventListener currentProductListener;
+    private Query currentQuery;
 
     @Nullable
     @Override
@@ -41,27 +53,69 @@ public class MenuFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_menu, container, false);
         
         rvProducts = view.findViewById(R.id.rvProducts);
+        rvCategoriesMenu = view.findViewById(R.id.rvCategoriesMenu);
         progressBar = view.findViewById(R.id.progressBar);
 
-        mDatabase = FirebaseDatabase.getInstance().getReference("products");
+        mDatabaseProducts = FirebaseDatabase.getInstance().getReference("products");
+        mDatabaseCategories = FirebaseDatabase.getInstance().getReference("categories");
 
         rvProducts.setHasFixedSize(true);
-        rvProducts.setLayoutManager(new androidx.recyclerview.widget.LinearLayoutManager(getContext()));
+        rvProducts.setLayoutManager(new LinearLayoutManager(getContext()));
         
+        rvCategoriesMenu.setHasFixedSize(true);
+        rvCategoriesMenu.setLayoutManager(new androidx.recyclerview.widget.GridLayoutManager(getContext(), 3));
+
+        categoryList = new ArrayList<>();
+        categoryAdapter = new CategoryAdapter(getContext(), categoryList, this);
+        rvCategoriesMenu.setAdapter(categoryAdapter);
+
         productList = new ArrayList<>();
-        // Truyền getContext() thay vì 'this'
         adapter = new ProductAdapter(getContext(), productList);
         rvProducts.setAdapter(adapter);
 
-        loadProducts();
+        // Nút "Tất cả" danh mục giả để reset bộ lọc
+        Category allCategory = new Category("all", "Tất Cả", "https://i.ibb.co/68fDkHj/all-icon.png");
+
+        // Tải Danh Mục
+        mDatabaseCategories.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                categoryList.clear();
+                categoryList.add(allCategory); // Luôn có mục Tất cả ở đầu
+                for (DataSnapshot snap : snapshot.getChildren()) {
+                    Category cat = snap.getValue(Category.class);
+                    if (cat != null) {
+                        cat.setId(snap.getKey());
+                        categoryList.add(cat);
+                    }
+                }
+                categoryAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {}
+        });
+
+        // Điểm khác biệt với Home: load ALL products lúc đầu thay vì 20 cái
+        loadProducts(null);
 
         return view;
     }
 
-    private void loadProducts() {
+    private void loadProducts(String filterCategoryId) {
         progressBar.setVisibility(View.VISIBLE);
         
-        mDatabase.addValueEventListener(new ValueEventListener() {
+        if (currentQuery != null && currentProductListener != null) {
+            currentQuery.removeEventListener(currentProductListener);
+        }
+
+        if (filterCategoryId == null || filterCategoryId.equals("all")) {
+            currentQuery = mDatabaseProducts; // Lấy toàn bộ thực đơn
+        } else {
+            currentQuery = mDatabaseProducts.orderByChild("categoryId").equalTo(filterCategoryId);
+        }
+
+        currentProductListener = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 productList.clear();
@@ -76,7 +130,7 @@ public class MenuFragment extends Fragment {
                 progressBar.setVisibility(View.GONE);
                 
                 if (productList.isEmpty() && getContext() != null) {
-                    Toast.makeText(getContext(), "Chưa có đồ uống nào!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Không có sản phẩm nào trong danh mục này", Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -87,6 +141,21 @@ public class MenuFragment extends Fragment {
                     Toast.makeText(getContext(), "Lỗi tải Menu: " + error.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             }
-        });
+        };
+
+        currentQuery.addValueEventListener(currentProductListener);
+    }
+
+    @Override
+    public void onCategoryClick(Category category) {
+        loadProducts(category.getId());
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        if (currentQuery != null && currentProductListener != null) {
+            currentQuery.removeEventListener(currentProductListener);
+        }
     }
 }

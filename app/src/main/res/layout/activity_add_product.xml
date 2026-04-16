@@ -29,6 +29,7 @@
                 app:tint="@color/white" />
 
             <TextView
+                android:id="@+id/tvAddProductTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
@@ -78,10 +79,24 @@
                 android:layout_height="wrap_content"
                 android:hint="Tên Món Nước (VD: Trà Đào)"
                 android:layout_marginBottom="16dp">
-
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/edtProductName"
                     android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+            </com.google.android.material.textfield.TextInputLayout>
+            
+            <!-- Mô tả -->
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Mô tả sản phẩm"
+                android:layout_marginBottom="16dp">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/edtDescription"
+                    android:layout_width="match_parent"
+                    android:minLines="3"
+                    android:gravity="top"
                     android:layout_height="wrap_content" />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -90,26 +105,119 @@
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="ID Danh Mục (VD: cat_coffee)"
+                android:hint="ID Danh Mục (VD: c1, c2)"
                 android:layout_marginBottom="16dp">
-
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/edtCategory"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
             </com.google.android.material.textfield.TextInputLayout>
 
-            <!-- Giá tiền -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Thiết lập Size &amp; Giá"
+                android:textColor="#4E342E"
+                android:textStyle="bold"
+                android:layout_marginBottom="8dp"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="16dp">
+
+                <!-- Giá tiền Size S -->
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:hint="Giá S (*)">
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/edtBasePrice"
+                        android:inputType="number"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+                </com.google.android.material.textfield.TextInputLayout>
+                
+                <View android:layout_width="8dp" android:layout_height="match_parent"/>
+
+                <!-- Giá tiền Size M -->
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:hint="Giá M (Bỏ trống = Ko có)">
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/edtPriceM"
+                        android:inputType="number"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+                </com.google.android.material.textfield.TextInputLayout>
+                
+                <View android:layout_width="8dp" android:layout_height="match_parent"/>
+
+                <!-- Giá tiền Size L -->
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:hint="Giá L (Bỏ trống = Ko có)">
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/edtPriceL"
+                        android:inputType="number"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Thuộc tính thêm (Ngăn chia bằng dấu phẩy)"
+                android:textColor="#4E342E"
+                android:textStyle="bold"
+                android:layout_marginBottom="8dp"/>
+
+            <!-- Toppings -->
             <com.google.android.material.textfield.TextInputLayout
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Giá tiền Cơ Bản (Size S)"
-                android:layout_marginBottom="24dp">
-
+                android:hint="Topping (VD: Trân Châu Đen, Thạch Phô Mai)"
+                android:layout_marginBottom="16dp">
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/edtBasePrice"
-                    android:inputType="number"
+                    android:id="@+id/edtToppings"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+            </com.google.android.material.textfield.TextInputLayout>
+            
+            <!-- Độ ngọt (Sugar) -->
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Lượng đường (VD: 0%, 50%, 100%)"
+                android:layout_marginBottom="16dp">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/edtSugar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- Lượng đá (Ice) -->
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Lượng đá (VD: Không Đá, Ít Đá, Nhiều Đá)"
+                android:layout_marginBottom="24dp">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/edtIce"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
             </com.google.android.material.textfield.TextInputLayout>

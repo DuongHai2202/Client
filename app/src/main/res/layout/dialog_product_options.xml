@@ -89,11 +89,11 @@
                 android:textStyle="bold"
                 android:textColor="@color/coffee_text"/>
 
-            <RadioGroup
-                android:id="@+id/rgSugar"
+            <GridLayout
+                android:id="@+id/glSugar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
+                android:columnCount="3"
                 android:layout_marginBottom="16dp"/>
 
             <!-- Chọn Lượng Đá -->
@@ -104,11 +104,11 @@
                 android:textStyle="bold"
                 android:textColor="@color/coffee_text"/>
 
-            <RadioGroup
-                android:id="@+id/rgIce"
+            <GridLayout
+                android:id="@+id/glIce"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
+                android:columnCount="3"
                 android:layout_marginBottom="16dp"/>
 
             <!-- Chọn Topping -->

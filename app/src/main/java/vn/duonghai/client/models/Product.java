@@ -8,7 +8,7 @@ public class Product {
 
     @Exclude
     private String id;
-    
+
     private String name;
     private String categoryId;
     private String image;
@@ -18,11 +18,12 @@ public class Product {
     private List<String> availableToppings;
     private List<String> sugarOptions;
     private List<String> iceOptions;
-    
+
     public static class SizeOption {
         private double price;
 
-        public SizeOption() {}
+        public SizeOption() {
+        }
 
         public SizeOption(double price) {
             this.price = price;
@@ -37,7 +38,7 @@ public class Product {
         }
     }
 
-    public Product() {}
+    private String description;
 
     @Exclude
     public String getId() {
@@ -73,20 +74,20 @@ public class Product {
         this.image = image;
     }
 
-    public boolean isAvailable() {
-        return isAvailable;
-    }
-
     public boolean getIsAvailable() {
         return isAvailable;
     }
 
-    public void setAvailable(boolean available) {
-        isAvailable = available;
+    public void setIsAvailable(boolean available) {
+        this.isAvailable = available;
     }
 
-    public void setIsAvailable(boolean available) {
-        isAvailable = available;
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public Map<String, SizeOption> getSizes() {
@@ -120,12 +121,14 @@ public class Product {
     public void setIceOptions(List<String> iceOptions) {
         this.iceOptions = iceOptions;
     }
-    
+
     @Exclude
     public double getBasePrice() {
         if (sizes != null && !sizes.isEmpty()) {
-            if (sizes.containsKey("S")) return sizes.get("S").getPrice();
-            if (sizes.containsKey("M")) return sizes.get("M").getPrice();
+            if (sizes.containsKey("S"))
+                return sizes.get("S").getPrice();
+            if (sizes.containsKey("M"))
+                return sizes.get("M").getPrice();
             return sizes.values().iterator().next().getPrice();
         }
         return 0;

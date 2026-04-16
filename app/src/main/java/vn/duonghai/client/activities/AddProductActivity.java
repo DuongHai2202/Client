@@ -23,6 +23,7 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import vn.duonghai.client.R;
@@ -32,14 +33,20 @@ import vn.duonghai.client.utils.ImgbbUploader;
 public class AddProductActivity extends AppCompatActivity {
 
     private ImageView imgPreview;
-    private TextInputEditText edtProductName, edtCategory, edtBasePrice;
+    private TextInputEditText edtProductName, edtDescription, edtCategory;
+    private TextInputEditText edtBasePrice, edtPriceM, edtPriceL;
+    private TextInputEditText edtToppings, edtSugar, edtIce;
+    
     private CheckBox cbIsAvailable;
     private Button btnSubmit;
     private ProgressBar progressBar;
     private CardView btnSelectImage;
     private ImageButton btnBack;
+    private android.widget.TextView tvTitle;
 
     private Uri selectedImageUri = null;
+    private String editProductId = null;
+    private String oldImageUrl = null;
 
     private final ActivityResultLauncher<Intent> imagePickerLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
@@ -59,17 +66,64 @@ public class AddProductActivity extends AppCompatActivity {
 
         imgPreview = findViewById(R.id.imgPreview);
         edtProductName = findViewById(R.id.edtProductName);
+        edtDescription = findViewById(R.id.edtDescription);
         edtCategory = findViewById(R.id.edtCategory);
         edtBasePrice = findViewById(R.id.edtBasePrice);
+        edtPriceM = findViewById(R.id.edtPriceM);
+        edtPriceL = findViewById(R.id.edtPriceL);
+        edtToppings = findViewById(R.id.edtToppings);
+        edtSugar = findViewById(R.id.edtSugar);
+        edtIce = findViewById(R.id.edtIce);
+        
         cbIsAvailable = findViewById(R.id.cbIsAvailable);
         btnSubmit = findViewById(R.id.btnSubmit);
         progressBar = findViewById(R.id.progressBar);
         btnSelectImage = findViewById(R.id.btnSelectImage);
         btnBack = findViewById(R.id.btnBackAddProduct);
+        tvTitle = findViewById(R.id.tvAddProductTitle);
 
         btnBack.setOnClickListener(v -> finish());
         btnSelectImage.setOnClickListener(v -> openGallery());
         btnSubmit.setOnClickListener(v -> handleSubmission());
+
+        editProductId = getIntent().getStringExtra("PRODUCT_ID");
+        if (editProductId != null) {
+            tvTitle.setText("Cập Nhật Món Nước");
+            btnSubmit.setText("CẬP NHẬT MÓN");
+            loadProductDataForEdit(editProductId);
+        }
+    }
+
+    private void loadProductDataForEdit(String productId) {
+        setLoadingState(true);
+        FirebaseDatabase.getInstance().getReference("products").child(productId)
+            .get().addOnSuccessListener(snapshot -> {
+                setLoadingState(false);
+                Product p = snapshot.getValue(Product.class);
+                if (p != null) {
+                    edtProductName.setText(p.getName());
+                    edtDescription.setText(p.getDescription());
+                    edtCategory.setText(p.getCategoryId());
+                    cbIsAvailable.setChecked(p.getIsAvailable());
+                    
+                    oldImageUrl = p.getImage();
+                    if (oldImageUrl != null && !oldImageUrl.isEmpty()) {
+                        com.bumptech.glide.Glide.with(this).load(oldImageUrl).into(imgPreview);
+                    }
+                    
+                    if (p.getSizes() != null) {
+                        if (p.getSizes().containsKey("S")) edtBasePrice.setText(String.valueOf((int)p.getSizes().get("S").getPrice()));
+                        if (p.getSizes().containsKey("M")) edtPriceM.setText(String.valueOf((int)p.getSizes().get("M").getPrice()));
+                        if (p.getSizes().containsKey("L")) edtPriceL.setText(String.valueOf((int)p.getSizes().get("L").getPrice()));
+                    }
+                    if (p.getAvailableToppings() != null) edtToppings.setText(android.text.TextUtils.join(", ", p.getAvailableToppings()));
+                    if (p.getSugarOptions() != null) edtSugar.setText(android.text.TextUtils.join(", ", p.getSugarOptions()));
+                    if (p.getIceOptions() != null) edtIce.setText(android.text.TextUtils.join(", ", p.getIceOptions()));
+                }
+            }).addOnFailureListener(e -> {
+                setLoadingState(false);
+                Toast.makeText(this, "Lỗi khi tải dữ liệu cũ: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+            });
     }
 
     private void openGallery() {
@@ -80,16 +134,19 @@ public class AddProductActivity extends AppCompatActivity {
 
     private void handleSubmission() {
         String name = edtProductName.getText().toString().trim();
+        String description = edtDescription.getText().toString().trim();
         String category = edtCategory.getText().toString().trim();
+        
         String priceStr = edtBasePrice.getText().toString().trim();
+        String priceMStr = edtPriceM.getText().toString().trim();
+        String priceLStr = edtPriceL.getText().toString().trim();
+        
+        String toppingsStr = edtToppings.getText().toString().trim();
+        String sugarStr = edtSugar.getText().toString().trim();
+        String iceStr = edtIce.getText().toString().trim();
 
         if (name.isEmpty() || category.isEmpty() || priceStr.isEmpty()) {
-            Toast.makeText(this, "Vui lòng nhập đủ Tên, Mã danh mục và Giá!", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        if (selectedImageUri == null) {
-            Toast.makeText(this, "Vui lòng chọn 1 bức ảnh!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Vui lòng nhập đủ Tên, ID danh mục và Giá S (Cơ bản)!", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -101,12 +158,26 @@ public class AddProductActivity extends AppCompatActivity {
             return;
         }
 
+        if (selectedImageUri == null) {
+            if (editProductId != null && oldImageUrl != null) {
+                // Giữ nguyên ảnh cũ, bỏ qua upload ImgBB
+                setLoadingState(true);
+                saveProductToFirebase(name, description, category, basePrice, priceMStr, priceLStr, 
+                                        toppingsStr, sugarStr, iceStr, oldImageUrl, cbIsAvailable.isChecked());
+                return;
+            } else {
+                Toast.makeText(this, "Vui lòng chọn 1 bức ảnh đại diện!", Toast.LENGTH_SHORT).show();
+                return;
+            }
+        }
+
         setLoadingState(true);
 
         ImgbbUploader.uploadImage(this, selectedImageUri, new ImgbbUploader.UploadCallback() {
             @Override
             public void onSuccess(String imageUrl) {
-                saveProductToFirebase(name, category, basePrice, imageUrl, cbIsAvailable.isChecked());
+                saveProductToFirebase(name, description, category, basePrice, priceMStr, priceLStr, 
+                                        toppingsStr, sugarStr, iceStr, imageUrl, cbIsAvailable.isChecked());
             }
 
             @Override
@@ -117,36 +188,50 @@ public class AddProductActivity extends AppCompatActivity {
         });
     }
 
-    private void saveProductToFirebase(String name, String category, double basePrice, String imageUrl, boolean isAvailable) {
+    private void saveProductToFirebase(String name, String description, String category, 
+                                       double basePrice, String priceMStr, String priceLStr,
+                                       String toppingsStr, String sugarStr, String iceStr, 
+                                       String imageUrl, boolean isAvailable) {
+        
         DatabaseReference databaseRef = FirebaseDatabase.getInstance().getReference("products");
-        String pushId = databaseRef.push().getKey();
+        String finalProductId = (editProductId != null) ? editProductId : databaseRef.push().getKey();
 
-        if (pushId == null) {
+        if (finalProductId == null) {
             setLoadingState(false);
-            Toast.makeText(this, "Lỗi Database", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Lỗi Database (Không tạo được Node Mới)", Toast.LENGTH_SHORT).show();
             return;
         }
 
         Product product = new Product();
-        product.setId(pushId);
+        product.setId(finalProductId);
         product.setName(name);
+        product.setDescription(description.isEmpty() ? "Món nước ngon tuyệt hảo!" : description);
         product.setCategoryId(category);
         product.setImage(imageUrl);
-        product.setAvailable(isAvailable);
+        product.setIsAvailable(isAvailable);
 
+        // 1. Phân rã SIZE
         Map<String, Product.SizeOption> sizesMap = new HashMap<>();
         sizesMap.put("S", new Product.SizeOption(basePrice));
+        if (!priceMStr.isEmpty()) {
+            try { sizesMap.put("M", new Product.SizeOption(Double.parseDouble(priceMStr))); } catch (Exception ignored) {}
+        }
+        if (!priceLStr.isEmpty()) {
+            try { sizesMap.put("L", new Product.SizeOption(Double.parseDouble(priceLStr))); } catch (Exception ignored) {}
+        }
         product.setSizes(sizesMap);
 
-        product.setAvailableToppings(new ArrayList<>());
-        product.setSugarOptions(new ArrayList<>());
-        product.setIceOptions(new ArrayList<>());
+        // 2. Phân rã Thuộc Tính Mở Rộng
+        product.setAvailableToppings(parseCommaString(toppingsStr));
+        product.setSugarOptions(parseCommaString(sugarStr.isEmpty() ? "0%,50%,100%" : sugarStr));
+        product.setIceOptions(parseCommaString(iceStr.isEmpty() ? "Không Đá,Biết Đá,Nhiều Đá" : iceStr));
 
-        databaseRef.child(pushId).setValue(product)
+        databaseRef.child(finalProductId).setValue(product)
                 .addOnCompleteListener(task -> {
                     setLoadingState(false);
                     if (task.isSuccessful()) {
-                        Toast.makeText(AddProductActivity.this, "Đăng món nước thành công!", Toast.LENGTH_LONG).show();
+                        String msg = (editProductId != null) ? "Cập nhật thành công!" : "Đăng món nước thành công rực rỡ!";
+                        Toast.makeText(AddProductActivity.this, msg, Toast.LENGTH_LONG).show();
                         finish();
                     } else {
                         Toast.makeText(AddProductActivity.this, "Lỗi lưu DB: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
@@ -154,10 +239,27 @@ public class AddProductActivity extends AppCompatActivity {
                 });
     }
 
+    // Hàm tiện ích cắt chuỗi ngăn cách bởi dấu phẩy thành List
+    private List<String> parseCommaString(String input) {
+        List<String> list = new ArrayList<>();
+        if (input == null || input.isEmpty()) return list;
+        
+        String[] parts = input.split(",");
+        for (String p : parts) {
+            if (!p.trim().isEmpty()) {
+                list.add(p.trim());
+            }
+        }
+        return list;
+    }
+
     private void setLoadingState(boolean isLoading) {
         btnSubmit.setEnabled(!isLoading);
         btnSelectImage.setEnabled(!isLoading);
+        edtProductName.setEnabled(!isLoading);
+        edtBasePrice.setEnabled(!isLoading);
+        edtCategory.setEnabled(!isLoading);
         progressBar.setVisibility(isLoading ? View.VISIBLE : View.GONE);
-        btnSubmit.setText(isLoading ? "ĐANG XỬ LÝ..." : "TẢI ẢNH LÊN & ĐĂNG MÓN");
+        btnSubmit.setText(isLoading ? "Đang xử lý..." : "Tải ảnh lên");
     }
 }

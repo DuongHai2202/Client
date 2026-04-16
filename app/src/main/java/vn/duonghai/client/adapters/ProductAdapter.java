@@ -106,8 +106,8 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
         TextView tvDialogBasePrice = dialogView.findViewById(R.id.tvDialogBasePrice);
         
         RadioGroup rgSize = dialogView.findViewById(R.id.rgSize);
-        RadioGroup rgSugar = dialogView.findViewById(R.id.rgSugar);
-        RadioGroup rgIce = dialogView.findViewById(R.id.rgIce);
+        android.widget.GridLayout glSugar = dialogView.findViewById(R.id.glSugar);
+        android.widget.GridLayout glIce = dialogView.findViewById(R.id.glIce);
         LinearLayout llToppings = dialogView.findViewById(R.id.llToppings);
         
         TextView tvQuantity = dialogView.findViewById(R.id.tvQuantity);
@@ -172,46 +172,92 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
 
         // Render Đường
         List<String> sugars = product.getSugarOptions();
+        final String[] finalSelectedSugar = {""};
+        List<RadioButton> sugarRadioButtons = new ArrayList<>();
         if (sugars != null && !sugars.isEmpty()) {
             boolean isFirst = true;
             for (String sugar : sugars) {
                 if (sugar == null || sugar.trim().isEmpty()) continue;
                 RadioButton rb = new RadioButton(context);
                 rb.setText(sugar);
-                rb.setPadding(0,0,24,0);
+                rb.setPadding(0, 0, 24, 0);
+
+                android.widget.GridLayout.LayoutParams params = new android.widget.GridLayout.LayoutParams();
+                params.setMargins(0, 0, 16, 16);
+                rb.setLayoutParams(params);
+
                 ColorStateList colorStateList = new ColorStateList(new int[][]{new int[]{-android.R.attr.state_checked}, new int[]{android.R.attr.state_checked}},
                         new int[]{ContextCompat.getColor(context, android.R.color.darker_gray), ContextCompat.getColor(context, R.color.coffee_primary)});
                 rb.setButtonTintList(colorStateList);
-                rgSugar.addView(rb);
-                if (isFirst) { rb.setChecked(true); isFirst = false; }
+
+                rb.setOnCheckedChangeListener((btnView, isChecked) -> {
+                    if (isChecked) {
+                        finalSelectedSugar[0] = sugar;
+                        for (RadioButton otherRb : sugarRadioButtons) {
+                            if (otherRb != btnView) otherRb.setChecked(false);
+                        }
+                    }
+                });
+
+                sugarRadioButtons.add(rb);
+                glSugar.addView(rb);
+
+                if (isFirst) {
+                    rb.setChecked(true);
+                    finalSelectedSugar[0] = sugar;
+                    isFirst = false;
+                }
             }
-            if (rgSugar.getChildCount() == 0) {
-                dialogView.findViewById(R.id.rgSugar).setVisibility(View.GONE);
+            if (glSugar.getChildCount() == 0) {
+                glSugar.setVisibility(View.GONE);
             }
         } else {
-            dialogView.findViewById(R.id.rgSugar).setVisibility(View.GONE);
+            glSugar.setVisibility(View.GONE);
         }
 
         // Render Đá
         List<String> ices = product.getIceOptions();
+        final String[] finalSelectedIce = {""};
+        List<RadioButton> iceRadioButtons = new ArrayList<>();
         if (ices != null && !ices.isEmpty()) {
             boolean isFirst = true;
             for (String ice : ices) {
                 if (ice == null || ice.trim().isEmpty()) continue;
                 RadioButton rb = new RadioButton(context);
                 rb.setText(ice);
-                rb.setPadding(0,0,24,0);
+                rb.setPadding(0, 0, 24, 0);
+
+                android.widget.GridLayout.LayoutParams params = new android.widget.GridLayout.LayoutParams();
+                params.setMargins(0, 0, 16, 16);
+                rb.setLayoutParams(params);
+
                 ColorStateList colorStateList = new ColorStateList(new int[][]{new int[]{-android.R.attr.state_checked}, new int[]{android.R.attr.state_checked}},
                         new int[]{ContextCompat.getColor(context, android.R.color.darker_gray), ContextCompat.getColor(context, R.color.coffee_primary)});
                 rb.setButtonTintList(colorStateList);
-                rgIce.addView(rb);
-                if (isFirst) { rb.setChecked(true); isFirst = false; }
+
+                rb.setOnCheckedChangeListener((btnView, isChecked) -> {
+                    if (isChecked) {
+                        finalSelectedIce[0] = ice;
+                        for (RadioButton otherRb : iceRadioButtons) {
+                            if (otherRb != btnView) otherRb.setChecked(false);
+                        }
+                    }
+                });
+
+                iceRadioButtons.add(rb);
+                glIce.addView(rb);
+
+                if (isFirst) {
+                    rb.setChecked(true);
+                    finalSelectedIce[0] = ice;
+                    isFirst = false;
+                }
             }
-            if (rgIce.getChildCount() == 0) {
-                dialogView.findViewById(R.id.rgIce).setVisibility(View.GONE);
+            if (glIce.getChildCount() == 0) {
+                glIce.setVisibility(View.GONE);
             }
         } else {
-            dialogView.findViewById(R.id.rgIce).setVisibility(View.GONE);
+            glIce.setVisibility(View.GONE);
         }
 
         // Render Topping Checkbox
@@ -272,19 +318,8 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
                 selSize = text.split(" ")[1];
             }
 
-            String selSugar = "";
-            int selectedSugarRbId = rgSugar.getCheckedRadioButtonId();
-            if (selectedSugarRbId != -1) {
-                RadioButton rb = dialogView.findViewById(selectedSugarRbId);
-                selSugar = rb.getText().toString();
-            }
-
-            String selIce = "";
-            int selectedIceRbId = rgIce.getCheckedRadioButtonId();
-            if (selectedIceRbId != -1) {
-                RadioButton rb = dialogView.findViewById(selectedIceRbId);
-                selIce = rb.getText().toString();
-            }
+            String selSugar = finalSelectedSugar[0];
+            String selIce = finalSelectedIce[0];
 
             List<String> selectedToppingsList = new ArrayList<>();
             for (CheckBox cb : toppingCheckBoxes) {

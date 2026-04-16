@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="12dp"
-    app:cardCornerRadius="16dp"
+    app:cardCornerRadius="12dp"
     app:cardElevation="3dp"
     app:cardBackgroundColor="@color/white">
 
@@ -15,14 +15,14 @@
         android:padding="12dp"
         android:gravity="center_vertical">
 
-        <!-- Ảnh sản phẩm -->
+        <!-- Ảnh danh mục -->
         <androidx.cardview.widget.CardView
-            android:layout_width="70dp"
-            android:layout_height="70dp"
-            app:cardCornerRadius="12dp">
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            app:cardCornerRadius="30dp">
 
             <ImageView
-                android:id="@+id/imgAdminProduct"
+                android:id="@+id/imgCategory"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:scaleType="centerCrop"
@@ -35,58 +35,25 @@
             android:layout_weight="1"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:layout_marginStart="12dp">
+            android:layout_marginStart="16dp">
 
             <TextView
-                android:id="@+id/tvAdminProductName"
+                android:id="@+id/tvCategoryName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Tên sản phẩm"
+                android:text="Tên Danh Mục"
                 android:textColor="#3E2723"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                android:maxLines="1"
-                android:ellipsize="end" />
+                android:textSize="18sp"
+                android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/tvAdminProductPrice"
+                android:id="@+id/tvCategoryId"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="35,000 đ"
-                android:textColor="#4E342E"
+                android:text="ID: cat_id"
+                android:textColor="#8D6E63"
                 android:textSize="14sp"
-                android:layout_marginTop="2dp" />
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginTop="4dp">
-
-                <TextView
-                    android:id="@+id/tvAdminProductCategory"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Danh mục: coffee"
-                    android:textColor="#8D6E63"
-                    android:textSize="12sp" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="  •  "
-                    android:textColor="#BDBDBD"
-                    android:textSize="12sp" />
-
-                <TextView
-                    android:id="@+id/tvAdminProductStatus"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Đang bán"
-                    android:textColor="#4CAF50"
-                    android:textSize="12sp"
-                    android:textStyle="bold" />
-            </LinearLayout>
+                android:layout_marginTop="4dp" />
         </LinearLayout>
 
         <!-- Nút sửa và xóa -->
@@ -96,7 +63,7 @@
             android:orientation="horizontal">
 
             <ImageButton
-                android:id="@+id/btnEditProduct"
+                android:id="@+id/btnEditCategory"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:background="?selectableItemBackgroundBorderless"
@@ -104,7 +71,7 @@
                 app:tint="#1976D2" />
 
             <ImageButton
-                android:id="@+id/btnDeleteProduct"
+                android:id="@+id/btnDeleteCategory"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:background="?selectableItemBackgroundBorderless"
