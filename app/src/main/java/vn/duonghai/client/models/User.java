@@ -1,6 +1,11 @@
 package vn.duonghai.client.models;
 
+import com.google.firebase.database.Exclude;
+
 public class User {
+    @Exclude
+    private String id;
+    
     private String name;
     private String email;
     private String phone;
@@ -14,6 +19,16 @@ public class User {
         this.email = email;
         this.phone = phone;
         this.role = role;
+    }
+
+    @Exclude
+    public String getId() {
+        return id;
+    }
+
+    @Exclude
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getName() {

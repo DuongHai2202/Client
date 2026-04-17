@@ -160,7 +160,7 @@ public class CartFragment extends Fragment implements CartAdapter.OnCartItemInte
             int newQuantity = item.getQuantity() - 1;
             cartRef.child(item.getCartItemId()).child("quantity").setValue(newQuantity);
         } else {
-            // Giảm bằng 1 thì hỏi xóa luôn không? Hoặc xóa luôn
+            // Giảm bằng 1 thì hỏi xóa luôn
             onDeleteItem(item);
         }
     }

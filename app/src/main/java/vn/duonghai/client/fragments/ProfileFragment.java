@@ -50,7 +50,7 @@ public class ProfileFragment extends Fragment {
 
         TextView tvFavoriteDrinks = view.findViewById(R.id.tvFavoriteDrinks);
         tvFavoriteDrinks.setOnClickListener(v -> {
-            Toast.makeText(getContext(), "Tính năng Món nước yêu thích sắp ra mắt", Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(getActivity(), vn.duonghai.client.activities.FavoriteActivity.class));
         });
         
         Button btnLogout = view.findViewById(R.id.btnLogout);

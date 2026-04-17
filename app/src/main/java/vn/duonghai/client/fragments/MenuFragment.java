@@ -63,7 +63,7 @@ public class MenuFragment extends Fragment implements CategoryAdapter.OnCategory
         rvProducts.setLayoutManager(new LinearLayoutManager(getContext()));
         
         rvCategoriesMenu.setHasFixedSize(true);
-        rvCategoriesMenu.setLayoutManager(new androidx.recyclerview.widget.GridLayoutManager(getContext(), 3));
+        rvCategoriesMenu.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
 
         categoryList = new ArrayList<>();
         categoryAdapter = new CategoryAdapter(getContext(), categoryList, this);

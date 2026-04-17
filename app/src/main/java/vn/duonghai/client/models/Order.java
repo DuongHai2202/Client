@@ -14,10 +14,12 @@ public class Order {
     private double subtotal;
     private double shippingFee;
     private double totalAmount;
-    private String status; // pending, confirmed, preparing, shipping, completed, cancelled
+    private String status; //0.pending, 1.confirmed, 2.preparing, 3.shipping, 4.completed, 5.cancelled
     private String paymentMethod; // COD, Momo, Banking (mockup)
     private String note;
     private long createdAt;
+    private String voucherCode;
+    private double discountAmount;
 
     public Order() {}
 
@@ -66,4 +68,10 @@ public class Order {
 
     public long getCreatedAt() { return createdAt; }
     public void setCreatedAt(long createdAt) { this.createdAt = createdAt; }
+
+    public String getVoucherCode() { return voucherCode; }
+    public void setVoucherCode(String voucherCode) { this.voucherCode = voucherCode; }
+
+    public double getDiscountAmount() { return discountAmount; }
+    public void setDiscountAmount(double discountAmount) { this.discountAmount = discountAmount; }
 }

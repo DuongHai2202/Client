@@ -13,11 +13,13 @@ import com.google.android.material.navigation.NavigationView;
 
 import vn.duonghai.client.R;
 import vn.duonghai.client.fragments.AdminAccountsFragment;
+import vn.duonghai.client.fragments.AdminChatListFragment;
 import vn.duonghai.client.fragments.AdminHomeFragment;
 import vn.duonghai.client.fragments.AdminMenuFragment;
 import vn.duonghai.client.fragments.AdminOrdersFragment;
 import vn.duonghai.client.fragments.AdminProfileFragment;
 import vn.duonghai.client.fragments.AdminReviewsFragment;
+import vn.duonghai.client.fragments.AdminVouchersFragment;
 import vn.duonghai.client.models.User;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -99,6 +101,16 @@ public class AdminMainActivity extends AppCompatActivity {
             } else if (itemId == R.id.nav_admin_profile) {
                 selectedFragment = new AdminProfileFragment();
                 title = "Cài đặt hệ thống";
+            } else if (itemId == R.id.nav_admin_chat) {
+                selectedFragment = new AdminChatListFragment();
+                title = "Khách hàng nhắn tin";
+            } else if (itemId == R.id.nav_admin_vouchers) {
+                selectedFragment = new AdminVouchersFragment();
+                title = "Quản lý Khuyến mãi";
+            } else if (itemId == R.id.nav_admin_inventory) {
+                startActivity(new Intent(AdminMainActivity.this, AdminInventoryActivity.class));
+                drawerLayout.closeDrawer(GravityCompat.START);
+                return true;
             }
 
             if (selectedFragment != null) {

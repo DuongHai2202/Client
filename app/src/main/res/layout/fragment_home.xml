@@ -54,29 +54,19 @@
             android:drawablePadding="10dp"
             app:layout_constraintTop_toBottomOf="@id/tvQuestion" />
 
-        <!-- Danh mục sản phẩm (Categories) -->
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rcvCategories"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:clipToPadding="false"
-            android:paddingHorizontal="16dp"
-            app:layout_constraintTop_toBottomOf="@id/etSearch" />
-
-        <!-- Tiêu đề Món Yêu Thích -->
+        <!-- Tiêu đề Món Yêu Thích (Đã đổi thành Sản phẩm bán chạy) -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginTop="24dp"
-            android:text="Món Nước Nổi Bật"
+            android:text="Sản Phẩm Bán Chạy"
             android:textColor="@color/coffee_text"
             android:textStyle="bold"
             android:textSize="20sp"
             android:id="@+id/tvFeaturedTitle"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/rcvCategories" />
+            app:layout_constraintTop_toBottomOf="@id/etSearch" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rcvFeaturedProducts"
@@ -87,6 +77,21 @@
             android:overScrollMode="never"
             android:clipToPadding="false"
             app:layout_constraintTop_toBottomOf="@id/tvFeaturedTitle" />
+
+        <!-- Nút Xem Thêm dẫn vào Menu -->
+        <Button
+            android:id="@+id/btnSeeMoreMenu"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Xem thêm thực đơn"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:backgroundTint="@color/coffee_primary"
+            android:layout_marginTop="16dp"
+            app:cornerRadius="20dp"
+            app:layout_constraintTop_toBottomOf="@id/rcvFeaturedProducts"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
 
         <ProgressBar
             android:id="@+id/pbHomeLoading"

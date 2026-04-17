@@ -23,8 +23,11 @@ import com.bumptech.glide.Glide;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -88,6 +91,44 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
         
         // Gỡ bỏ sự kiện click toàn bộ thẻ để tránh bấm nhầm
         holder.itemView.setOnClickListener(null);
+
+        // Xử lý việc người dùng nhấn vào icon trái tim (Yêu thích)
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (currentUser != null) {
+            String uid = currentUser.getUid();
+            DatabaseReference favRef = FirebaseDatabase.getInstance().getReference("users")
+                    .child(uid).child("favorites").child(product.getId());
+
+            // Kiểm tra trạng thái tim khi load
+            favRef.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    if (snapshot.exists()) {
+                        holder.imgFavorite.setImageResource(R.drawable.ic_heart_filled);
+                        holder.imgFavorite.setTag("liked");
+                    } else {
+                        holder.imgFavorite.setImageResource(R.drawable.ic_heart_outline);
+                        holder.imgFavorite.setTag("unliked");
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {}
+            });
+
+            // Xử lý click Thêm/Xóa
+            holder.imgFavorite.setOnClickListener(v -> {
+                if ("liked".equals(holder.imgFavorite.getTag())) {
+                    favRef.removeValue().addOnSuccessListener(aVoid -> {
+                        Toast.makeText(context, "Đã xóa khỏi danh sách yêu thích", Toast.LENGTH_SHORT).show();
+                    });
+                } else {
+                    favRef.setValue(true).addOnSuccessListener(aVoid -> {
+                        Toast.makeText(context, "Đã thêm vào danh sách yêu thích", Toast.LENGTH_SHORT).show();
+                    });
+                }
+            });
+        }
     }
 
     @Override
@@ -361,7 +402,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
     }
 
     public static class ProductViewHolder extends RecyclerView.ViewHolder {
-        ImageView imgProduct;
+        ImageView imgProduct, imgFavorite;
         TextView tvProductName;
         TextView tvProductPrice;
         ImageButton btnAddCart;
@@ -372,6 +413,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
             tvProductName = itemView.findViewById(R.id.tvProductName);
             tvProductPrice = itemView.findViewById(R.id.tvProductPrice);
             btnAddCart = itemView.findViewById(R.id.btnAddCart);
+            imgFavorite = itemView.findViewById(R.id.imgFavorite);
         }
     }
 }

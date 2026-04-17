@@ -73,6 +73,13 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderVH> {
 
         // Tổng tiền
         holder.tvOrderTotal.setText(formatter.format(order.getTotalAmount()) + " đ");
+
+        // Click để xem chi tiết
+        holder.itemView.setOnClickListener(v -> {
+            android.content.Intent intent = new android.content.Intent(context, vn.duonghai.client.activities.OrderDetailActivity.class);
+            intent.putExtra("orderId", order.getOrderId());
+            context.startActivity(intent);
+        });
     }
 
     private void updateStatusSteps(OrderVH holder, String status) {

@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#F5F5F5">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:background="#FFFFFF"
+        android:elevation="4dp">
+        <ImageButton
+            android:id="@+id/btnBackAddMaterial"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_centerVertical="true"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@android:drawable/ic_menu_revert"
+            app:tint="#333333" />
+        <TextView
+            android:id="@+id/tvAddMaterialTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="Thêm Nguyên Vật Liệu"
+            android:textColor="#333333"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+    </RelativeLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="16dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Tên vật liệu"
+                android:textStyle="bold" />
+            <EditText
+                android:id="@+id/edtMaterialName"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="#FFFFFF"
+                android:paddingHorizontal="16dp"
+                android:layout_marginTop="8dp"
+                android:hint="VD: Sữa đặc Ông Thọ" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Số lượng tồn kho ban đầu"
+                android:textStyle="bold"
+                android:layout_marginTop="16dp" />
+            <EditText
+                android:id="@+id/edtMaterialQty"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="#FFFFFF"
+                android:paddingHorizontal="16dp"
+                android:layout_marginTop="8dp"
+                android:inputType="numberDecimal"
+                android:hint="VD: 50" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Đơn vị tính"
+                android:textStyle="bold"
+                android:layout_marginTop="16dp" />
+            <EditText
+                android:id="@+id/edtMaterialUnit"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="#FFFFFF"
+                android:paddingHorizontal="16dp"
+                android:layout_marginTop="8dp"
+                android:hint="VD: Hộp, Kg, Túi" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Giá nhập (đ)"
+                android:textStyle="bold"
+                android:layout_marginTop="16dp" />
+            <EditText
+                android:id="@+id/edtMaterialPrice"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="#FFFFFF"
+                android:paddingHorizontal="16dp"
+                android:layout_marginTop="8dp"
+                android:inputType="numberDecimal"
+                android:hint="VD: 25000" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Ngưỡng cảnh báo sắp hết"
+                android:textStyle="bold"
+                android:layout_marginTop="16dp" />
+            <EditText
+                android:id="@+id/edtMaterialThreshold"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="#FFFFFF"
+                android:paddingHorizontal="16dp"
+                android:layout_marginTop="8dp"
+                android:inputType="numberDecimal"
+                android:hint="VD: Cảnh báo khi dưới 10" />
+
+            <Button
+                android:id="@+id/btnSaveMaterial"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:layout_marginTop="32dp"
+                android:text="LƯU THÔNG TIN"
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                android:backgroundTint="#FF9800"
+                app:cornerRadius="12dp" />
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

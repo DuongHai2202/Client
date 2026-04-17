@@ -86,6 +86,13 @@ public class AdminOrderAdapter extends RecyclerView.Adapter<AdminOrderAdapter.Ad
             holder.tvNote.setVisibility(View.GONE);
         }
 
+        // Click để xem chi tiết đơn hàng
+        holder.itemView.setOnClickListener(v -> {
+            android.content.Intent intent = new android.content.Intent(context, vn.duonghai.client.activities.OrderDetailActivity.class);
+            intent.putExtra("orderId", order.getOrderId());
+            context.startActivity(intent);
+        });
+
         // Nút hành động theo trạng thái
         String status = order.getStatus();
         if ("completed".equals(status) || "cancelled".equals(status)) {

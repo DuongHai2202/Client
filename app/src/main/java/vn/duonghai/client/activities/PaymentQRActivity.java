@@ -27,14 +27,11 @@ import java.util.Locale;
 import vn.duonghai.client.R;
 
 public class PaymentQRActivity extends AppCompatActivity {
-
-    // ===== CẤU HÌNH NGÂN HÀNG =====
     private static final String BANK_ID = "bidv";
     private static final String ACCOUNT_NO = "5012169430";
     private static final String ACCOUNT_NAME = "DUONG VAN HAI";
     private static final String BANK_DISPLAY = "BIDV";
     private static final long PAYMENT_TIMEOUT_MS = 5 * 60 * 1000; // 5 phút
-    // ================================
 
     private ImageView imgQRCode;
     private ProgressBar pbLoadingQR;
@@ -83,13 +80,10 @@ public class PaymentQRActivity extends AppCompatActivity {
         tvTransferContent.setText(transferContent);
 
         loadVietQR((int) totalAmount, transferContent);
-
         // Bắt đầu đếm ngược 5 phút
         startCountdown();
-
         // Tự động đợi admin xác nhận
         listenForPaymentConfirmation();
-
         // Xử lý nút Back hệ thống
         getOnBackPressedDispatcher().addCallback(this, new androidx.activity.OnBackPressedCallback(true) {
             @Override

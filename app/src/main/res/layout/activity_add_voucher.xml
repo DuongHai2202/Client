@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:background="#FFFFFF">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Thêm / Sửa Voucher"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:layout_marginBottom="24dp"/>
+
+    <EditText
+        android:id="@+id/edtVoucherCode"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Mã voucher (VD: HIGHLANDS20)"
+        android:textAllCaps="true"
+        android:layout_marginBottom="16dp"/>
+
+    <EditText
+        android:id="@+id/edtVoucherDiscount"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Mức giảm giá (VNĐ)"
+        android:inputType="number"
+        android:layout_marginBottom="16dp"/>
+
+    <EditText
+        android:id="@+id/edtVoucherMinOrder"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Giá trị đơn hàng tối thiểu (VNĐ)"
+        android:inputType="number"
+        android:layout_marginBottom="16dp"/>
+
+    <EditText
+        android:id="@+id/edtVoucherQuantity"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Số lượng mã"
+        android:inputType="number"
+        android:layout_marginBottom="16dp"/>
+
+    <CheckBox
+        android:id="@+id/cbxVoucherActive"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Kích hoạt ngay (Hoạt động)"
+        android:checked="true"
+        android:layout_marginBottom="24dp"/>
+
+    <Button
+        android:id="@+id/btnSaveVoucher"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:text="Lưu Voucher" />
+
+</LinearLayout>

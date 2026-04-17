@@ -234,6 +234,59 @@
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
+            <!-- Voucher -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="3dp"
+                app:cardBackgroundColor="@color/white">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Mã Giảm Giá"
+                        android:textColor="#4E342E"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:orientation="horizontal">
+
+                        <EditText
+                            android:id="@+id/edtVoucherCheckout"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:layout_height="48dp"
+                            android:background="#F5F0EB"
+                            android:hint="Nhập mã voucher"
+                            android:paddingHorizontal="12dp"
+                            android:textSize="14sp"
+                            android:textAllCaps="true" />
+
+                        <Button
+                            android:id="@+id/btnApplyVoucher"
+                            android:layout_width="wrap_content"
+                            android:layout_height="48dp"
+                            android:layout_marginStart="8dp"
+                            android:text="ÁP DỤNG"
+                            android:textColor="@color/white"
+                            android:backgroundTint="#8D6E63"
+                            app:cornerRadius="8dp" />
+                    </LinearLayout>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
             <!-- Tổng tiền -->
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
@@ -287,6 +340,27 @@
                             android:layout_height="wrap_content"
                             android:text="15,000 đ"
                             android:textColor="#3E2723"
+                            android:textSize="14sp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:orientation="horizontal">
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:layout_height="wrap_content"
+                            android:text="Giảm giá"
+                            android:textColor="#8D6E63"
+                            android:textSize="14sp" />
+                        <TextView
+                            android:id="@+id/tvCheckoutDiscount"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="-0 đ"
+                            android:textColor="#D32F2F"
                             android:textSize="14sp" />
                     </LinearLayout>
 

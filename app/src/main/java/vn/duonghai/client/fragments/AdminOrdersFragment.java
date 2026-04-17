@@ -90,12 +90,18 @@ public class AdminOrdersFragment extends Fragment {
                 }
             }
             switch (status) {
-                case "pending": highlightTab(tabPending); break;
-                case "confirmed": highlightTab(tabConfirmed); break;
-                case "preparing": highlightTab(tabPreparing); break;
-                case "shipping": highlightTab(tabShipping); break;
-                case "completed": highlightTab(tabCompleted); break;
-                case "cancelled": highlightTab(tabCancelled); break;
+                case "pending": highlightTab(tabPending);
+                break;
+                case "confirmed": highlightTab(tabConfirmed);
+                break;
+                case "preparing": highlightTab(tabPreparing);
+                break;
+                case "shipping": highlightTab(tabShipping);
+                break;
+                case "completed": highlightTab(tabCompleted);
+                break;
+                case "cancelled": highlightTab(tabCancelled);
+                break;
             }
         }
 

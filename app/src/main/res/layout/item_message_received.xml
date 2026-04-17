@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="8dp"
+    android:gravity="start"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_chat_received"
+        android:padding="12dp"
+        android:layout_marginEnd="60dp">
+        
+        <TextView
+            android:id="@+id/tvReceivedMessage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Nội dung"
+            android:textColor="@color/coffee_text"
+            android:textSize="16sp" />
+    </LinearLayout>
+    
+    <TextView
+        android:id="@+id/tvReceivedTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="12:00"
+        android:textColor="#9E9E9E"
+        android:textSize="10sp"
+        android:layout_marginTop="2dp"
+        android:layout_marginStart="4dp" />
+</LinearLayout>

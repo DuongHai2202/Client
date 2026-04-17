@@ -51,6 +51,14 @@ public class MainActivity extends AppCompatActivity {
         drawerLayout = findViewById(R.id.drawerLayout);
         navigationView = findViewById(R.id.navigationView);
         toolbar = findViewById(R.id.toolbar);
+        com.google.android.material.floatingactionbutton.FloatingActionButton fabChat = findViewById(R.id.fabCustomerChat);
+
+        // Nút chat dành cho khách hàng
+        fabChat.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, ChatActivity.class);
+            intent.putExtra("receiverId", "admin"); // Gửi đến admin
+            startActivity(intent);
+        });
 
         // Thiết lập Toolbar cho Activity
         setSupportActionBar(toolbar);
@@ -156,5 +164,45 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    // Removed deprecated onBackPressed()
+    /**
+     * Phương thức hỗ trợ các Fragment yêu cầu chuyển Tab/Trang trong MainActivity
+     * @param itemId ID của menu item trong NavigationView (ví dụ: R.id.nav_menu)
+     */
+    public void selectNavigationItem(int itemId) {
+        android.view.MenuItem item = navigationView.getMenu().findItem(itemId);
+        if (item != null) {
+            // NavigationView của công dự án này sử dụng listener trực tiếp để thay đổi fragment
+            // Nên ta có thể lấy listener của nó ra hoặc đơn giản là gọi logic giống trong listener
+            navigationView.setCheckedItem(itemId);
+            
+            Fragment selectedFragment = null;
+            String title = "";
+
+            if (itemId == R.id.nav_home) {
+                selectedFragment = new vn.duonghai.client.fragments.HomeFragment();
+                title = "Trang chủ";
+            } else if (itemId == R.id.nav_menu) {
+                selectedFragment = new vn.duonghai.client.fragments.MenuFragment();
+                title = "Menu";
+            } else if (itemId == R.id.nav_cart) {
+                selectedFragment = new vn.duonghai.client.fragments.CartFragment();
+                title = "Giỏ hàng";
+            } else if (itemId == R.id.nav_profile) {
+                selectedFragment = new vn.duonghai.client.fragments.ProfileFragment();
+                title = "Tài khoản";
+            } else if (itemId == R.id.nav_about) {
+                selectedFragment = new vn.duonghai.client.fragments.AboutUsFragment();
+                title = "Về chúng tôi";
+            }
+
+            if (selectedFragment != null) {
+                getSupportFragmentManager().beginTransaction()
+                        .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
+                        .replace(R.id.fragmentContainer, selectedFragment)
+                        .commit();
+                
+                if (getSupportActionBar() != null) getSupportActionBar().setTitle(title);
+            }
+        }
+    }
 }

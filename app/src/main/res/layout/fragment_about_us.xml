@@ -15,14 +15,14 @@
         <ImageView
             android:layout_width="120dp"
             android:layout_height="120dp"
-            android:src="@drawable/ic_launcher_background"
+            android:src="@drawable/ic_launcher_foreground"
             android:layout_marginTop="32dp"
             android:layout_marginBottom="16dp"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="The Coffee Master"
+            android:text="AppDrinkOrder"
             android:textColor="#4E342E"
             android:textSize="24sp"
             android:textStyle="bold"
@@ -31,7 +31,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Khởi nguồn từ những hạt cà phê hảo hạng nhất, The Coffee Master mang đến trải nghiệm thưởng thức tinh tế và trọn vẹn. Chúng tôi không chỉ bán cà phê, chúng tôi trao gửi sự tận tâm trong từng giọt nước."
+            android:text="Bắt nguồn từ những hạt cà phê hảo hạng nhất, AppDrinkOrder mang đến trải nghiệm thưởng thức tinh tế và trọn vẹn. Chúng tôi không chỉ bán cà phê, chúng tôi trao gửi sự tận tâm trong từng ly nước."
             android:textColor="#6D4C41"
             android:textSize="14sp"
             android:lineSpacingExtra="4dp"
@@ -76,7 +76,7 @@
                         android:layout_width="0dp"
                         android:layout_weight="1"
                         android:layout_height="wrap_content"
-                        android:text="123 Đường Cà Phê, Quận 1, TP.HCM"
+                        android:text="54 Triều Khúc, Hà nội"
                         android:textColor="#4E342E"/>
                 </LinearLayout>
 
@@ -113,7 +113,7 @@
                         android:layout_width="0dp"
                         android:layout_weight="1"
                         android:layout_height="wrap_content"
-                        android:text="support@thecoffeemaster.vn"
+                        android:text="support@thecoffee.vn"
                         android:textColor="#4E342E"/>
                 </LinearLayout>
 

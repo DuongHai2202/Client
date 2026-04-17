@@ -77,6 +77,34 @@
         <activity
             android:name=".activities.PaymentQRActivity"
             android:exported="false" />
+        <activity
+            android:name=".activities.FavoriteActivity"
+            android:exported="false" />
+            
+        <!-- New Activities from Client-master-1 -->
+        <activity
+            android:name=".activities.ChatActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.ReviewActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.OrderDetailActivity"
+            android:exported="false" />
+
+        <!-- New Activities from Client-master 2 -->
+        <activity
+            android:name=".activities.AdminVoucherActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.AddVoucherActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.AdminInventoryActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.AddMaterialActivity"
+            android:exported="false" />
 
     </application>
 

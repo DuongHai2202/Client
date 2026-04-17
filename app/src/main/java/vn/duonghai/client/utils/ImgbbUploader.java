@@ -32,6 +32,7 @@ public class ImgbbUploader {
     public static void uploadImage(Context context, Uri imageUri, UploadCallback callback) {
         new Thread(() -> {
             try {
+                // Đọc ảnh khi up lên
                 InputStream inputStream = context.getContentResolver().openInputStream(imageUri);
                 ByteArrayOutputStream byteBuffer = new ByteArrayOutputStream();
                 int bufferSize = 1024;

@@ -30,6 +30,7 @@ import vn.duonghai.client.R;
 import vn.duonghai.client.models.Address;
 import vn.duonghai.client.models.CartItem;
 import vn.duonghai.client.models.Order;
+import vn.duonghai.client.models.Voucher;
 
 public class CheckoutActivity extends AppCompatActivity {
 
@@ -41,6 +42,13 @@ public class CheckoutActivity extends AppCompatActivity {
     private Button btnPlaceOrder;
     private ProgressBar pbCheckout;
     private ImageButton btnBack;
+
+    private EditText edtVoucherCheckout;
+    private Button btnApplyVoucher;
+    private TextView tvCheckoutDiscount;
+    private double discountAmount = 0;
+    private String appliedVoucherCode = null;
+    private Voucher appliedVoucher = null;
 
     private FirebaseUser currentUser;
     private DatabaseReference cartRef, addressRef, ordersRef, userRef;
@@ -68,6 +76,10 @@ public class CheckoutActivity extends AppCompatActivity {
         pbCheckout = findViewById(R.id.pbCheckout);
         btnBack = findViewById(R.id.btnBackCheckout);
 
+        edtVoucherCheckout = findViewById(R.id.edtVoucherCheckout);
+        btnApplyVoucher = findViewById(R.id.btnApplyVoucher);
+        tvCheckoutDiscount = findViewById(R.id.tvCheckoutDiscount);
+
         btnBack.setOnClickListener(v -> finish());
 
         currentUser = FirebaseAuth.getInstance().getCurrentUser();
@@ -82,7 +94,64 @@ public class CheckoutActivity extends AppCompatActivity {
         loadDefaultAddress();
         loadCartItems();
 
+        btnApplyVoucher.setOnClickListener(v -> applyVoucher());
         btnPlaceOrder.setOnClickListener(v -> placeOrder());
+    }
+
+    private void applyVoucher() {
+        String code = edtVoucherCheckout.getText().toString().trim().toUpperCase();
+        if (code.isEmpty()) {
+            Toast.makeText(this, "Vui lòng nhập mã giảm giá", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        FirebaseDatabase.getInstance().getReference("vouchers")
+                .orderByChild("code").equalTo(code)
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        if (snapshot.exists()) {
+                            for (DataSnapshot ds : snapshot.getChildren()) {
+                                Voucher v = ds.getValue(Voucher.class);
+                                if (v != null && v.isActive()) {
+                                    if (v.getQuantity() <= 0) {
+                                        Toast.makeText(CheckoutActivity.this, "Mã giảm giá đã hết lượt sử dụng", Toast.LENGTH_SHORT).show();
+                                        return;
+                                    }
+                                    if (subtotal < v.getMinOrderValue()) {
+                                        Toast.makeText(CheckoutActivity.this, "Đơn hàng tối thiểu để dùng mã là " + formatter.format(v.getMinOrderValue()) + " đ", Toast.LENGTH_SHORT).show();
+                                        return;
+                                    }
+
+                                    v.setId(ds.getKey());
+                                    appliedVoucher = v;
+                                    appliedVoucherCode = v.getCode();
+                                    discountAmount = v.getDiscountValue();
+
+                                    tvCheckoutDiscount.setText("-" + formatter.format(discountAmount) + " đ");
+                                    updateTotalUI();
+                                    Toast.makeText(CheckoutActivity.this, "Áp dụng mã thành công!", Toast.LENGTH_SHORT).show();
+                                    return;
+                                }
+                            }
+                        }
+                        Toast.makeText(CheckoutActivity.this, "Mã giảm giá không hợp lệ hoặc đã hết hạn", Toast.LENGTH_SHORT).show();
+                        discountAmount = 0;
+                        appliedVoucherCode = null;
+                        appliedVoucher = null;
+                        tvCheckoutDiscount.setText("-0 đ");
+                        updateTotalUI();
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {}
+                });
+    }
+
+    private void updateTotalUI() {
+        double total = subtotal + shippingFee - discountAmount;
+        if (total < 0) total = 0;
+        tvCheckoutTotal.setText(formatter.format(total) + " đ");
     }
 
     private void loadDefaultAddress() {
@@ -134,7 +203,7 @@ public class CheckoutActivity extends AppCompatActivity {
                 }
                 tvCheckoutSubtotal.setText(formatter.format(subtotal) + " đ");
                 tvCheckoutShipping.setText(formatter.format(shippingFee) + " đ");
-                tvCheckoutTotal.setText(formatter.format(subtotal + shippingFee) + " đ");
+                updateTotalUI();
             }
             @Override
             public void onCancelled(@NonNull DatabaseError error) {}
@@ -208,7 +277,12 @@ public class CheckoutActivity extends AppCompatActivity {
                 order.setItems(cartItems);
                 order.setSubtotal(subtotal);
                 order.setShippingFee(shippingFee);
-                order.setTotalAmount(subtotal + shippingFee);
+                order.setVoucherCode(appliedVoucherCode);
+                order.setDiscountAmount(discountAmount);
+
+                final double finalTotal = Math.max(0, subtotal + shippingFee - discountAmount);
+                order.setTotalAmount(finalTotal);
+
                 order.setStatus("pending");
                 order.setPaymentMethod(finalPaymentMethod);
                 order.setNote(note);
@@ -217,6 +291,13 @@ public class CheckoutActivity extends AppCompatActivity {
                 // Ghi đơn hàng vào Firebase
                 ordersRef.child(orderId).setValue(order).addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
+                        if (appliedVoucher != null && appliedVoucher.getId() != null) {
+                            FirebaseDatabase.getInstance().getReference("vouchers")
+                                    .child(appliedVoucher.getId())
+                                    .child("quantity")
+                                    .setValue(appliedVoucher.getQuantity() - 1);
+                        }
+
                         // Xóa giỏ hàng sau khi đặt thành công
                         cartRef.removeValue();
 
@@ -224,11 +305,11 @@ public class CheckoutActivity extends AppCompatActivity {
                             // Mở màn hình QR thanh toán
                             android.content.Intent qrIntent = new android.content.Intent(CheckoutActivity.this, PaymentQRActivity.class);
                             qrIntent.putExtra("ORDER_ID", orderId);
-                            qrIntent.putExtra("TOTAL_AMOUNT", subtotal + shippingFee);
+                            qrIntent.putExtra("TOTAL_AMOUNT", finalTotal);
                             startActivity(qrIntent);
                             finish();
                         } else {
-                            Toast.makeText(CheckoutActivity.this, "🎉 Đặt hàng thành công! Quán sẽ xác nhận ngay.", Toast.LENGTH_LONG).show();
+                            Toast.makeText(CheckoutActivity.this, "Đặt hàng thành công! Đợi quán xác nhận đơn hàng.", Toast.LENGTH_LONG).show();
                             finish();
                         }
                     } else {

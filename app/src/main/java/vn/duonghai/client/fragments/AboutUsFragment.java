@@ -14,7 +14,6 @@ import vn.duonghai.client.R;
 public class AboutUsFragment extends Fragment {
 
     public AboutUsFragment() {
-        // Required empty public constructor
     }
 
     @Nullable
